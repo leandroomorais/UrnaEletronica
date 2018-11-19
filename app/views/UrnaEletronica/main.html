@@ -58,10 +58,108 @@
       f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-NKDMSK6');
   </script>
+  
   <!-- End Google Tag Manager -->
 </head>
 
-        #{doLayout /}
+<body>
+    <div class="main" style="background: #fff;">
+    	<div class="content">
+        	<div class="container-fluid">
+        		<div class="row">
+						<div class="col-lg-8">
+							<p id="demo"></p>
+							<div class="tela" id="myId" style="width: 85%;height: 500px;">
+								<table class="table table-striped table-responsive-sm">
+									<thead>
+										<tr>
+											<th id="teste">
+												Aguardando o terminal para a Votação
+											</th>
+										</tr>
+									</thead>
+									<tbody id="body-tela">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					
+						<div class="col-lg-4" style="margin-top: 10%">
+								<div style="background: #ddd; border: 0.2px solid #000">
+									<span>
+										<img src="@{'public/img/logo-justica-eleitoral.png'}" width="90" height="90">
+									</span>
+									<p class="justica">Justiça Eleitoral</p>
+								</div>
+								<div class="container-digitos">
+									<div class="body-digitos">
+										<table>
+											<tbody >
+												
+												<tr>
+													<td>
+														<button id="dig-1" value="1" onclick="setarValorComponents('form','dig-1')" class="btn btn-default">1</button>								
+													</td>
+													<td>
+														<button id="dig-2" value="2" onclick="setarValorComponents('form','dig-2')" class="btn btn-default">2</button>								
+													</td>
+													<td>
+														<button id="dig-3" value="3" onclick="setarValorComponents('form','dig-3')" class="btn btn-default">3</button>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<button id="dig-4" value="4" onclick="setarValorComponents('form','dig-4')" class="btn btn-default">4</button>								
+													</td>
+													<td>
+														<button id="dig-5" value="5" onclick="setarValorComponents('form','dig-5')" class="btn btn-default">5</button>								
+													</td>
+													<td>
+														<button id="dig-6" value="6" onclick="setarValorComponents('form','dig-6')" class="btn btn-default">6</button>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<button id="dig-7" value="7" onclick="setarValorComponents('form','dig-7')" class="btn btn-default">7</button>								
+													</td>
+													<td>
+														<button id="dig-8" value="8" onclick="setarValorComponents('form','dig-8')" class="btn btn-default">8</button>								
+													</td>
+													<td>
+														<button id="dig-9" value="9" onclick="setarValorComponents('form','dig-9')" class="btn btn-default">9</button>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<button id="dig-0" value="0" onclick="setarValorComponents('form','dig-0')" class="btn btn-default" style="margin-left: 110%">0</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div style="margin-left: 12%;">
+										<table>
+											<tbody>
+												<tr>
+													<td>
+														<button class="btn btn-default" id="branco" style="background: #fff; color: #000">Branco</button>
+													</td>
+													<td>
+														<button class="btn btn-danger" id="corrige">Corrige</button>
+													</td>
+													<td>
+														<button class="btn btn-success" id="confirma" >Confirma</button>
+													</td>
+												</tr>												 
+											</tbody>
+										</table>
+									</div>
+								</div>          					
+						</div>			 
+				</div>
+        	</div>
+        </div>		
+    </div>
         
         <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
         #{get 'moreScripts' /}
@@ -287,8 +385,10 @@
       });
     });
   </script>
+   
   <!-- Sharrre libray -->
   <script src="demo/jquery.sharrre.js"></script>
+   
   <script>
     $(document).ready(function() {
 
@@ -394,6 +494,7 @@
 
     });
   </script>
+	
 </body>
 
 </html>

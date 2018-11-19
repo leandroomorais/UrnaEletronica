@@ -3,8 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                                       UrnaEletronica.index
-
+GET     /                                       UrnaEletronica.main
+GET     /listCandidatos							Application.listCandidatos
+GET 	/pegarCandidato/{num}					Application.pegarCandidato
+GET		/liberarUrna							Terminal.liberarUrna 
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
