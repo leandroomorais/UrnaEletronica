@@ -10,6 +10,7 @@ import models.Cargo;
 import models.Numero;
 import models.Partido;
 import play.mvc.Controller;
+import uteis.CandidatoTRE;
 
 public class Application extends Controller {
 	private static final Gson g = new Gson();
@@ -54,17 +55,17 @@ public class Application extends Controller {
     }
     
     public static void listCandidatos() {
-    	List<Candidato> candidatos = Candidato.findAll();
+    	List<CandidatoTRE> candidatos = CandidatoTRE.findAll();
     	String json = g.toJson(candidatos);
         renderJSON(json);
     }
     
     public static void pegarCandidato(int num) {
     	CandidatoNaoExist naoExist = new CandidatoNaoExist();
-    	List<Candidato> candidatos = Candidato.findAll();
+    	List<CandidatoTRE> candidatos = CandidatoTRE.findAll();
     	naoExist.string = "candidatoNaoExiste";
-    	for(Candidato candidato : candidatos) {
-    		if(candidato.numero.numero == num) {
+    	for(CandidatoTRE candidato : candidatos) {
+    		if(candidato.numeroTRE.numero == num) {
     			String json = g.toJson(candidato);
     			renderJSON(json);
     		}

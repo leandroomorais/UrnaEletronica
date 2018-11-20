@@ -1,4 +1,4 @@
-var j = 0;
+﻿var j = 0;
 var k = 0;
 var s = 0;
 var num = "";
@@ -7,12 +7,17 @@ var preencheu = false;
 var preencheuBool = false;
 var controlador = 0;
 var senador = 1;
-var votou = false;
+var votoValido = false;
+var votoNull = false;
+var votouBranco = false;
 var encerrarVotacao = false;
+var partido = "";
+var numero = "";
+var	Cargo = ""; 
+var nome = "";
 
 function ComponentsTelaBranco(cargo){
 	try{
-		votou = false;
 		document.getElementById('teste').innerHTML = "";
 		var tbody = document.getElementById('body-tela');
 		var trLinha1 = document.createElement('tr');
@@ -68,7 +73,6 @@ function ComponentsTelaBranco(cargo){
 
 function ComponentsTelaFim(){
 	try{
-		votou = false;
 		document.getElementById('teste').innerHTML = "";
 		var tbody = document.getElementById('body-tela');
 		var tr = document.createElement('tr');
@@ -86,7 +90,6 @@ function ComponentsTelaFim(){
 
 function ComponentsTelaGovernador(){
 	try{
-		votou = false;
 		document.getElementById('teste').innerHTML = "";
 		var tbody = document.getElementById('body-tela');
 		var tr = document.createElement('tr');
@@ -144,7 +147,6 @@ function ComponentsTelaGovernador(){
 
 function ComponentsTelaDeputadoFederal(){
 	try{
-		votou = false;
 		document.getElementById('teste').innerHTML = "";
 		var tbody = document.getElementById('body-tela');
 		var tr = document.createElement('tr');
@@ -218,7 +220,6 @@ function ComponentsTelaDeputadoFederal(){
 
 function ComponentsTelaDeputadoEstadual(){
 	try{
-		votou = false;
 		document.getElementById('teste').innerHTML = "";
 		var tbody = document.getElementById('body-tela');
 		var trLinha1 = document.createElement('tr');
@@ -302,7 +303,6 @@ function ComponentsTelaDeputadoEstadual(){
 
 function ComponentsTelaSenador(){
 	try{
-		votou = false;
 		document.getElementById('teste').innerHTML = "";
 		var tbody = document.getElementById('body-tela');
 		var tr = document.createElement('tr');
@@ -452,17 +452,19 @@ function passarValores(dados){
 		
 		
 		pSeuVoto.textContent = "Seu voto para";
-		pCargo.textContent = dados.cargo.cargo;
+		pCargo.textContent = dados.cargoTRE.cargo;
 		pNome.textContent = dados.nome;
-		pPartido.textContent = dados.partido.sigla;
+		pPartido.textContent = dados.partidoTRE.sigla;
 		pTecla.textContent = "Aperte a Tecla";
 		pConfirma.textContent = "VERDE: para CONFIRMAR";
 		pCorrige.textContent = "LARANJA: para CORRIGIR";
 		
+		pPartido.setAttribute('id', 'partido');
+		
 		img.src = dados.url;
 		img.setAttribute('width', '200px');
 		img.setAttribute('height', '200px');
-		if(dados.cargo.cargo == "Senador 1" || dados.cargo.cargo == "Senador 2"){
+		if(dados.cargoTRE.cargo == "Senador 1" || dados.cargoTRE.cargo == "Senador 2"){
 			if(dados.urlSuple1.length > 0 && dados.urlSuple2.length > 0){
 				imgSuple1.src = dados.urlSuple1;
 				imgSuple1.setAttribute('width', '100px');
@@ -474,7 +476,7 @@ function passarValores(dados){
 				tdColunaSuple1.appendChild(imgSuple1);
 				tdColunaSuple2.appendChild(imgSuple2);
 			}
-		}else if(dados.cargo.cargo == "Presidente" || dados.cargo.cargo == "Governador"){
+		}else if(dados.cargoTRE.cargo == "Presidente" || dados.cargoTRE.cargo == "Governador"){
 			pViceNome.textContent = dados.vice;
 			
 			imgVice.src = dados.urlVice;
@@ -533,7 +535,6 @@ function passarValores(dados){
 }
 
 function criarComponentsTelaPresidente(){
-	votou = false;
 	document.getElementById('teste').innerHTML = "";
 	var tbody = document.getElementById('body-tela');
 	var tr = document.createElement('tr');
@@ -592,28 +593,35 @@ function clearTelas(){
 	document.getElementById('body-tela').innerHTML = "";
 }
 
+
+
+
 $(document).ready(function(){
 	var servico = "http://localhost:9000/pegarCandidato/";
 	var servicoTerminal = "http://localhost:9000/liberarUrna";
 	
-	var telaFinal = false;
-	var array = [];
 	
-	function onUrnaDone(data) {
+	function onUrnaDone(dados) {
 		try{
 			if(preencheu == true){
-				if(data.string == "candidatoNaoExiste"){
+				if(dados.string == "candidatoNaoExiste"){
 					candidatoNaoEncontrado($("#cargo").text());
+					votoNull = true;
 				}
-				if(data.cargo.cargo == $("#cargo").text()){
-					passarValores(data);
+				if(dados.cargoTRE.cargo == $("#cargo").text()){
+					passarValores(dados);
+					partido = dados.partidoTRE.sigla;
+					numero = dados.numeroTRE.numero;
+					Cargo = dados.cargoTRE.cargo;
+					nome = dados.nome;
+					votoValido = true;
 				}else {
 					candidatoNaoEncontrado($("#cargo").text());
+					votoNull = true;
 				}
 				preencheu = false;
 			}
 		}catch(erro){
-			//alert("Erro: "+erro);
 		}
 	}
 	
@@ -721,9 +729,9 @@ $(document).ready(function(){
 	
 	
 	$("button").click(function(){
-		$.getJSON(servico + $("#num").val())
-    	.done(onUrnaDone);
-		cargo = $("#cargo").text();
+			$.getJSON(servico + $("#num").val())
+	    	.done(onUrnaDone);
+			cargo = $("#cargo").text();
     });
 	
 	$("#confirma").click(function(){
@@ -731,11 +739,67 @@ $(document).ready(function(){
 			alert("Preencha os campos!");
 		}else if(encerrarVotacao == true){
 			alert("Votação Encerrada!");
-		}else{
+		}else if(votoNull == true){
 			votou = true;
+			clearTelas();
+			$.ajax({
+		          url : "http://localhost:9000/insert",
+		          type : 'post',
+		          data : {
+		               partido : "Voto Nulo",
+		               cargo : "Voto Nulo",
+		               numero: "Voto Nulo",
+		               nome: "Voto Nulo"
+		          },
+		          
+				})
+				.done(function(msg){
+				});
+			$.getJSON(servicoTerminal)
+			.done(verificarUrna);
+			controlador++;
+			j = 0;
+			k = 0;
+			num = "";
+			preencheu = false;
+			preencheuBool = false;
+			votoNull = false;
+		}else if(votouBranco == true){
+			$.ajax({
+		          url : "http://localhost:9000/insert",
+		          type : 'post',
+		          data : {
+		               partido : "Voto Branco",
+		               cargo : "Voto Branco",
+		               numero: "Voto Branco",
+		               nome: "Voto Branco"
+		          },
+		          
+				})
+				.done(function(msg){
+				});
+			votouBranco = false;
+			$.getJSON(servicoTerminal)
+			.done(verificarUrna);
+			controlador++;
+		}else if(votoValido == true){
+			votoValido = false;
 			clearTelas();
 			$.getJSON(servicoTerminal)
 			.done(verificarUrna);
+			$.ajax({
+		          url : "http://localhost:9000/insert",
+		          type : 'post',
+		          data : {
+		               partido : partido,
+		               cargo : Cargo,
+		               numero: numero,
+		               nome: nome
+		          },
+		          
+				})
+				.done(function(msg){
+				});
 			controlador++;
 			j = 0;
 			k = 0;
@@ -765,6 +829,7 @@ $(document).ready(function(){
 		if(encerrarVotacao == true){
 			alert("Votação Encerrada!");
 		}else{
+			votouBranco = true;
 			clearTelas();
 			telaBranco(cargo);
 			j = 0;
@@ -772,6 +837,9 @@ $(document).ready(function(){
 			num = "";
 			preencheu = false;
 			preencheuBool = true;
+			if(votoNull == true){
+				votoNull = false;
+			}
 		}
 	});
 	
