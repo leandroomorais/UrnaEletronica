@@ -7,7 +7,8 @@ import com.google.gson.annotations.Expose;
 import play.db.jpa.Model;
 
 @Entity
-public class Numero extends Model{
+public class Status extends Model{
 	@Expose
-	public int numero;
+	public String status;
+	
 }

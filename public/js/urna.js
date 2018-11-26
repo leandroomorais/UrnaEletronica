@@ -15,6 +15,13 @@ var partido = "";
 var numero = "";
 var	Cargo = ""; 
 var nome = "";
+var iniciarVotacao = false;
+var terminalTravouUrna = true;
+var terminalLiberouUrna = true;
+var botaoCorrige = false;
+var iniciarUrna = true;
+var botaoBanco = false;
+
 
 function ComponentsTelaBranco(cargo){
 	try{
@@ -593,13 +600,72 @@ function clearTelas(){
 	document.getElementById('body-tela').innerHTML = "";
 }
 
+function telaTerminal(){
+	document.getElementById('teste').innerHTML = "Aguardando o terminal para a Votação";
+}
+
+function telaDeputadoFederal(){
+	try{
+		ComponentsTelaDeputadoFederal();
+	}catch(erro){
+		alert("Erro: "+erro);
+	}
+}
+
+function telaGovernador(){
+	try{
+		ComponentsTelaGovernador();
+	}catch(erro){
+		alert("Erro: "+erro)
+	}
+}
+
+function telaPresidente(){
+	try{
+		criarComponentsTelaPresidente();
+	}catch(erro){
+		alert("Erro: "+erro)
+	}
+}
+
+function telaDeputadoEstadual(){
+	try{
+		ComponentsTelaDeputadoEstadual();
+	}catch(erro){
+		alert("Erro: "+erro);
+	}
+}
+
+function telaSenador(){
+	try{
+		ComponentsTelaSenador();
+	}catch(erro){
+		alert("Erro: "+erro);
+	}
+}
+
+function telaFim(){
+	try{
+		ComponentsTelaFim();
+	}catch(erro){
+		alert("Erro: "+erro);
+	}
+}
+
+function telaBranco(cargo){
+	try {
+		ComponentsTelaBranco(cargo);
+	} catch (erro) {
+		alert("Erro: "+erro);
+	}
+}
+
 
 
 
 $(document).ready(function(){
 	var servico = "http://localhost:9000/pegarCandidato/";
-	var servicoTerminal = "http://localhost:9000/liberarUrna";
-	
+	var servicoTerminal = "http://localhost:9000/getTerminal";
 	
 	function onUrnaDone(dados) {
 		try{
@@ -626,112 +692,85 @@ $(document).ready(function(){
 	}
 	
 	function verificarUrna(data){
-		
-		if(data.status == "liberada"){
-			if(controlador == 0){
-				clearTelas();
-				telaDeputadoEstadual();
-				preencheu = false;
-			}else if(controlador == 1){
-				clearTelas();
-				telaDeputadoFederal();
-				preencheu = false;
-			}else if(controlador == 2){
-				clearTelas();
-				telaSenador();
-				senador++;
-				preencheu = false;
-			}else if(controlador == 3){
-				clearTelas();
-				telaSenador();
-				preencheu = false;
-			}else if(controlador == 4){
-				clearTelas();
-				telaGovernador();
-				preencheu = false;
-			}else if(controlador == 5){
-				clearTelas();
-				telaPresidente();
-				preencheu = false;
-			}else if(controlador == 6){
-				clearTelas();
-				telaFim();
-				encerrarVotacao = true;
-			}
-		}else{
-			alert("Não funciona");
-		}
-		
-		
-	}
-	
-	function telaDeputadoFederal(){
-		try{
-			ComponentsTelaDeputadoFederal();
-		}catch(erro){
-			alert("Erro: "+erro);
-		}
-	}
-	
-	function telaGovernador(){
-		try{
-			ComponentsTelaGovernador();
-		}catch(erro){
-			alert("Erro: "+erro)
-		}
-	}
-	
-	function telaPresidente(){
-		try{
-			criarComponentsTelaPresidente();
-		}catch(erro){
-			alert("Erro: "+erro)
-		}
-	}
-	
-	function telaDeputadoEstadual(){
-		try{
-			ComponentsTelaDeputadoEstadual();
-		}catch(erro){
-			alert("Erro: "+erro);
-		}
-	}
-	
-	function telaSenador(){
-		try{
-			ComponentsTelaSenador();
-		}catch(erro){
-			alert("Erro: "+erro);
-		}
-	}
-	
-	function telaFim(){
-		try{
-			ComponentsTelaFim();
-		}catch(erro){
-			alert("Erro: "+erro);
-		}
-	}
-	
-	function telaBranco(cargo){
 		try {
-			ComponentsTelaBranco(cargo);
-		} catch (erro) {
-			alert("Erro: "+erro);
+			if(data.status == "liberada"){
+				iniciarVotacao = true;
+				if(controlador == 0){
+					clearTelas();
+					telaDeputadoEstadual();
+					preencheu = false;
+				}else if(controlador == 1){
+					clearTelas();
+					telaDeputadoFederal();
+					preencheu = false;
+				}else if(controlador == 2){
+					if(botaoCorrige == true){
+						clearTelas();
+						telaSenador();
+						preencheu = false;
+					}else{
+						clearTelas();
+						telaSenador();
+						preencheu = false;
+					}
+				}else if(controlador == 3){
+					senador = 2;
+					clearTelas();
+					telaSenador();
+					preencheu = false;
+				}else if(controlador == 4){
+					clearTelas();
+					telaGovernador();
+					preencheu = false;
+				}else if(controlador == 5){
+					clearTelas();
+					telaPresidente();
+					preencheu = false;
+				}else if(controlador == 6){
+					clearTelas();
+					telaFim();
+					encerrarVotacao = true;
+					controlador = 0;
+				}
+			}
+			
+		} catch (e) {
+			//alert(e);
 		}
+		
 	}
-	
-	
-	
-	$.getJSON(servicoTerminal)
-	.done(verificarUrna);
-	
-	
-	
+ 
+		var interval = setInterval(function () {
+	        if(iniciarUrna){
+	        	$.getJSON(servicoTerminal)
+	        	.done(function (dados) {
+					if(dados.status == "bloqueada"){
+						 if(terminalTravouUrna){
+							 clearTelas();
+							 telaTerminal();
+							 terminalTravouUrna = false;
+							 terminalLiberouUrna = true;
+						 }
+						 terminalTravouUrna = true;
+					}
+					else if(dados.status == "liberada"){
+						if(terminalLiberouUrna){
+							$.getJSON(servicoTerminal)
+				        	.done(verificarUrna);
+							terminalLiberouUrna = false;
+						}
+						terminalTravouUrna = false;
+					}
+				});
+	        	
+	        }
+	        
+	    }, 1000);
+		 
 	$("button").click(function(){
-			$.getJSON(servico + $("#num").val())
-	    	.done(onUrnaDone);
-			cargo = $("#cargo").text();
+		$.getJSON(servico + $("#num").val())
+    	.done(onUrnaDone);
+		cargo = $("#cargo").text();
     });
 	
 	$("#confirma").click(function(){
@@ -740,7 +779,6 @@ $(document).ready(function(){
 		}else if(encerrarVotacao == true){
 			alert("Votação Encerrada!");
 		}else if(votoNull == true){
-			votou = true;
 			clearTelas();
 			$.ajax({
 		          url : "http://localhost:9000/insert",
@@ -748,7 +786,7 @@ $(document).ready(function(){
 		          data : {
 		               partido : "Voto Nulo",
 		               cargo : "Voto Nulo",
-		               numero: "Voto Nulo",
+		               numero: -2,
 		               nome: "Voto Nulo"
 		          },
 		          
@@ -756,14 +794,14 @@ $(document).ready(function(){
 				.done(function(msg){
 				});
 			$.getJSON(servicoTerminal)
-			.done(verificarUrna);
+        	.done(verificarUrna);
+        	votoNull = false;
 			controlador++;
 			j = 0;
 			k = 0;
 			num = "";
 			preencheu = false;
 			preencheuBool = false;
-			votoNull = false;
 		}else if(votouBranco == true){
 			$.ajax({
 		          url : "http://localhost:9000/insert",
@@ -771,22 +809,22 @@ $(document).ready(function(){
 		          data : {
 		               partido : "Voto Branco",
 		               cargo : "Voto Branco",
-		               numero: "Voto Branco",
+		               numero: -1,
 		               nome: "Voto Branco"
 		          },
 		          
 				})
 				.done(function(msg){
 				});
-			votouBranco = false;
 			$.getJSON(servicoTerminal)
-			.done(verificarUrna);
+        	.done(verificarUrna);
+        	votouBranco = false;
 			controlador++;
 		}else if(votoValido == true){
-			votoValido = false;
 			clearTelas();
 			$.getJSON(servicoTerminal)
-			.done(verificarUrna);
+        	.done(verificarUrna);
+        	votoValido = false;
 			$.ajax({
 		          url : "http://localhost:9000/insert",
 		          type : 'post',
@@ -821,6 +859,7 @@ $(document).ready(function(){
 			num = "";
 			preencheu = false;
 			preencheuBool = false;
+			botaoCorrige = true;
 		}
 		
 	});
@@ -836,6 +875,7 @@ $(document).ready(function(){
 			k = 0;
 			num = "";
 			preencheu = false;
+			botaoBanco = true;
 			preencheuBool = true;
 			if(votoNull == true){
 				votoNull = false;
@@ -889,10 +929,6 @@ function getNumero(){
 		
 	}
 	document.getElementById('num').value = num;
-}
-
-function countInputs(){
-	return document.getElementById('form').length;
 }
 
 function passarProx(campoatual, proxcampo)

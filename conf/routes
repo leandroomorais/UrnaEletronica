@@ -4,11 +4,10 @@
 
 # Home page
 GET     /                                       UrnaEletronica.main
-GET     /listCandidatos							Application.listCandidatos
-GET 	/pegarCandidato/{num}					Application.pegarCandidato
-GET		/liberarUrna							Terminal.liberarUrna 
-GET 	/listaVotacao							UrnaEletronica.listaVotacao
 POST	/insert									UrnaEletronica.enviarVoto
+GET 	/getTerminal							UrnaEletronica.getTerminal
+POST 	/setTerminal							UrnaEletronica.setTerminal
+GET		/pegarCandidato/{num}					UrnaEletronica.pegarCandidato
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
