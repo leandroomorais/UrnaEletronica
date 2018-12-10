@@ -9,12 +9,11 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
 import models.Candidato;
-import models.CandidatoNaoExist;
 import models.Cargo;
 import models.Partido;
+import models.Secao;
 import models.Status;
 import models.Votacao;
 import play.libs.WS;
@@ -27,10 +26,6 @@ public class UrnaEletronica extends Controller{
 	private static boolean votoBranco = false;
 	private static final Gson g = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
-	public static void main() {
-		render();
-	}
-	
 	public static void enviarVoto(String partido, String cargo, int numero, String nome){
 		Votacao votacao = new Votacao();
 		if(partido.equals("Voto Branco") && cargo.equals("Voto Branco") && numero == -1 && nome.equals("Voto Branco")) {
@@ -116,13 +111,32 @@ public class UrnaEletronica extends Controller{
 	
 	public static void finalizarVotacao(boolean finalizar) {
 		if(finalizar) {
-			
+			Status status = new Status();
+			status.status = "true";
+			renderJSON(status);
+		}else {
+			Status status = new Status();
+			status.status = "false";
+			renderJSON(status);
 		}
 	}
 	
 	public static void cancelharVotacao(boolean cancelharVotacao) {
 		if(cancelharVotacao) {
+			Status status = new Status();
+			status.status = "true";
+			renderJSON(status);
+		}else {
+			Status status = new Status();
+			status.status = "false";
+			renderJSON(status);
 		}
+	}
+	
+	public static void enviarSecao(String secao) {
+		Secao secao2 = new Secao();
+		secao2.secao = secao;
+		renderJSON(secao2);
 	}
 	
 	private static boolean isEmptyStatus() {

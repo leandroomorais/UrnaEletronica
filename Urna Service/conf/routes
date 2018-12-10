@@ -10,6 +10,7 @@ POST 	/api/setTerminal						UrnaEletronica.setTerminal
 POST	/api/finalizarVotacao					UrnaEletronica.finalizarVotacao
 POST 	/api/cancelharVotacao					UrnaEletronica.cancelharVotacao
 GET		/api/emitirBoletim						UrnaEletronica.emitirBoletim
+POST	/api/enviarSecao						UrnaEletronica.enviarSecao
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
