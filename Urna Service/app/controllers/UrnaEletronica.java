@@ -10,8 +10,10 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import models.CancelarVotacao;
 import models.Candidato;
 import models.Cargo;
+import models.FinalizarVotacao;
 import models.Partido;
 import models.Secao;
 import models.Status;
@@ -111,32 +113,69 @@ public class UrnaEletronica extends Controller{
 	
 	public static void finalizarVotacao(boolean finalizar) {
 		if(finalizar) {
-			Status status = new Status();
-			status.status = "true";
-			renderJSON(status);
+			if(isEmptyFinalizadaVotacao()) {
+				FinalizarVotacao finalizarVotacao = new FinalizarVotacao();
+				finalizarVotacao.status = finalizar;
+				finalizarVotacao.save();
+				ok();
+			}else {
+				long id = 1;
+				FinalizarVotacao finalizarVotacao = FinalizarVotacao.findById(id);
+				finalizarVotacao.status = finalizar;
+				finalizarVotacao.save();
+				ok();
+			}
 		}else {
-			Status status = new Status();
-			status.status = "false";
-			renderJSON(status);
+			if(isEmptyFinalizadaVotacao()) {
+				FinalizarVotacao finalizarVotacao = new FinalizarVotacao();
+				finalizarVotacao.status = finalizar;
+				finalizarVotacao.save();
+				ok();
+			}else {
+				long id = 1;
+				FinalizarVotacao finalizarVotacao = FinalizarVotacao.findById(id);
+				finalizarVotacao.status = finalizar;
+				finalizarVotacao.save();
+				ok();
+			}
 		}
 	}
 	
 	public static void cancelharVotacao(boolean cancelharVotacao) {
 		if(cancelharVotacao) {
-			Status status = new Status();
-			status.status = "true";
-			renderJSON(status);
+			if(isEmptyCancelarVotacao()) {
+				CancelarVotacao cancelarVotacao = new CancelarVotacao();
+				cancelarVotacao.status = cancelharVotacao;
+				cancelarVotacao.save();
+				ok();
+			}else {
+				long id = 1;
+				CancelarVotacao cancelarVotacao = CancelarVotacao.findById(id);
+				cancelarVotacao.status = cancelharVotacao;
+				cancelarVotacao.save();
+				ok();
+			}
 		}else {
-			Status status = new Status();
-			status.status = "false";
-			renderJSON(status);
+			if(isEmptyCancelarVotacao()) {
+				CancelarVotacao cancelarVotacao = new CancelarVotacao();
+				cancelarVotacao.status = cancelharVotacao;
+				cancelarVotacao.save();
+				ok();
+			}else {
+				long id = 1;
+				CancelarVotacao cancelarVotacao = CancelarVotacao.findById(id);
+				cancelarVotacao.status = cancelharVotacao;
+				cancelarVotacao.save();
+				ok();
+			}
 		}
 	}
 	
 	public static void enviarSecao(String secao) {
 		Secao secao2 = new Secao();
 		secao2.secao = secao;
-		renderJSON(secao2);
+		secao2.save();
+		ok();
 	}
 	
 	private static boolean isEmptyStatus() {
@@ -145,6 +184,36 @@ public class UrnaEletronica extends Controller{
 			return true;
 		}
 		return false;
+	}
+	
+	private static boolean isEmptyFinalizadaVotacao() {
+		List<FinalizarVotacao> list = FinalizarVotacao.findAll();
+		if(list.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+	
+	private static boolean isEmptyCancelarVotacao() {
+		List<CancelarVotacao> list = CancelarVotacao.findAll();
+		if(list.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void getCancelarVotacao() {
+		long id = 1;
+		CancelarVotacao cancelarVotacao = CancelarVotacao.findById(id);
+		String json = g.toJson(cancelarVotacao);
+		renderJSON(json);
+	}
+	
+	public static void getFinalizadaVotacao() {
+		long id = 1;
+		FinalizarVotacao finalizarVotacao = FinalizarVotacao.findById(id);
+		String json = g.toJson(finalizarVotacao);
+		renderJSON(json);
 	}
 	
 	public static void getTerminal() {
