@@ -248,7 +248,6 @@ function ComponentsTelaDeputadoEstadual(){
 		
 		
 		tdColuna1.setAttribute('id', 'cargo');
-		
 		form.setAttribute('name', 'f1');
 		form.setAttribute('id', 'form');
 		form.setAttribute('method', 'post');
@@ -469,8 +468,8 @@ function passarValores(dados){
 		pPartido.setAttribute('id', 'partido');
 		
 		img.src = dados.url;
-		img.setAttribute('width', '200px');
-		img.setAttribute('height', '200px');
+		img.setAttribute('width', '90px');
+		img.setAttribute('height', '90px');
 		if(dados.cargo.cargo == "Senador 1" || dados.cargo.cargo == "Senador 2"){
 			if(dados.urlSuple1.length > 0 && dados.urlSuple2.length > 0){
 				imgSuple1.src = dados.urlSuple1;
@@ -487,8 +486,8 @@ function passarValores(dados){
 			pViceNome.textContent = dados.vice;
 			
 			imgVice.src = dados.url;
-			imgVice.setAttribute('width', '100px');
-			imgVice.setAttribute('height', '100px');
+			imgVice.setAttribute('width', '90px');
+			imgVice.setAttribute('height', '90px');
 			
 			tdColunaReferencsVice.textContent = "Vice candidato";
 			tdColunaViceNome.appendChild(pViceNome);
@@ -665,7 +664,7 @@ function telaBranco(cargo){
 
 $(document).ready(function(){
 	var servico = "http://localhost:9000/pegarCandidato/";
-	var servicoTerminal = "http://localhost:9000/getTerminal";
+	var servicoTerminal = "http://localhost:9000/pegarTerminal";
 	
 	function onUrnaDone(dados) {
 		try{
@@ -740,32 +739,32 @@ $(document).ready(function(){
 		
 	}
  
-		var interval = setInterval(function () {
-	        if(iniciarUrna){
-	        	$.getJSON(servicoTerminal)
-	        	.done(function (dados) {
-					if(dados.status == "bloqueada"){
-						 if(terminalTravouUrna){
-							 clearTelas();
-							 telaTerminal();
-							 terminalTravouUrna = false;
-							 terminalLiberouUrna = true;
-						 }
-						 terminalTravouUrna = true;
-					}
-					else if(dados.status == "liberada"){
-						if(terminalLiberouUrna){
-							$.getJSON(servicoTerminal)
-				        	.done(verificarUrna);
-							terminalLiberouUrna = false;
+			var interval = setInterval(function () {
+		        if(iniciarUrna == true){
+		        	$.getJSON(servicoTerminal)
+		        	.done(function (dados) {
+						if(dados.status == "bloqueada"){
+							 if(terminalTravouUrna){
+								 clearTelas();
+								 telaTerminal();
+								 terminalTravouUrna = false;
+								 terminalLiberouUrna = true;
+							 }
+							 terminalTravouUrna = true;
 						}
-						terminalTravouUrna = false;
-					}
-				});
-	        	
-	        }
-	        
-	    }, 1000);
+						else if(dados.status == "liberada"){
+							if(terminalLiberouUrna){
+								$.getJSON(servicoTerminal)
+					        	.done(verificarUrna);
+								terminalLiberouUrna = false;
+							}
+							terminalTravouUrna = false;
+						}
+					});
+		        	
+		        }
+		        
+		    }, 1000);
 		 
 	$("button").click(function(){
 		$.getJSON(servico + $("#num").val())
@@ -915,7 +914,6 @@ function setarValorComponents(element,id){
 
 function getNumero(){
 	var form = document.getElementById('form');
-	
 	for(var i = 0;i<form.length-1;i++){
 		if(k == form.length-2){
 			preencheu = true;
