@@ -700,33 +700,40 @@ $(document).ready(function(){
 					preencheu = false;
 				}else if(controlador == 1){
 					clearTelas();
+					document.getElementById('demo1').play();
 					telaDeputadoFederal();
 					preencheu = false;
 				}else if(controlador == 2){
 					if(botaoCorrige == true){
 						clearTelas();
+						document.getElementById('demo1').play();
 						telaSenador();
 						preencheu = false;
 					}else{
 						clearTelas();
+						document.getElementById('demo1').play();
 						telaSenador();
 						preencheu = false;
 					}
 				}else if(controlador == 3){
 					senador = 2;
 					clearTelas();
+					document.getElementById('demo1').play();
 					telaSenador();
 					preencheu = false;
 				}else if(controlador == 4){
 					clearTelas();
+					document.getElementById('demo1').play();
 					telaGovernador();
 					preencheu = false;
 				}else if(controlador == 5){
 					clearTelas();
+					document.getElementById('demo1').play();
 					telaPresidente();
 					preencheu = false;
 				}else if(controlador == 6){
 					clearTelas();
+					document.getElementById('demo2').play();
 					telaFim();
 					encerrarVotacao = true;
 					controlador = 0;
