@@ -407,12 +407,12 @@ $(document).ready(function(){
 					votoValido = true;
 				}
 				preencheu = false;
-				var xmlhttp = new XMLHttpRequest();
+				/*var xmlhttp = new XMLHttpRequest();
 				xmlhttp.open("GET", 'http://meuip.com/api/meuip.php');
 				xmlhttp.send();
 				xmlhttp.onload = function(e) {
 					ipUrna = xmlhttp.response;
-				}
+				}*/
 			}
 		}catch(erro){
 			alert("Erro: "+erro);
