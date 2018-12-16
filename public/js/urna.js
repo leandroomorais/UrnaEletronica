@@ -1,6 +1,7 @@
 ﻿var j = 0;
 var k = 0;
 var s = 0;
+var ant = 1;
 var num = "";
 var cargo = "";
 var preencheu = false;
@@ -21,7 +22,9 @@ var terminalLiberouUrna = true;
 var botaoCorrige = false;
 var iniciarUrna = true;
 var botaoBanco = false;
-
+var arrayCargos = [];
+var arrayNumeros = [];
+var ipUrna = "";
 
 function ComponentsTelaBranco(cargo){
 	try{
@@ -90,285 +93,6 @@ function ComponentsTelaFim(){
 		 
 		tr.appendChild(td);
 		tbody.appendChild(tr);
-	}catch(erro){
-		alert("Erro: "+erro);
-	}
-}
-
-function ComponentsTelaGovernador(){
-	try{
-		document.getElementById('teste').innerHTML = "";
-		var tbody = document.getElementById('body-tela');
-		var tr = document.createElement('tr');
-		var td = document.createElement('td');
-		td.textContent = "Governador";
-		var td3 = document.createElement('td');
-		var img = document.createElement("img");
-		
-		var tr2 = document.createElement('tr');
-		var td2 = document.createElement('td');
-		
-		var form = document.createElement('form');
-		var input1 = document.createElement('input');
-		var input2 = document.createElement('input');
-		var input3 = document.createElement('input');
-		td.setAttribute('id', 'cargo');
-		
-		form.setAttribute('name', 'f1');
-		form.setAttribute('id', 'form');
-		form.setAttribute('method', 'post');
-		 
-		
-		input1.setAttribute('name', "campo1");
-		input1.setAttribute('class', "campo-text");
-		input1.setAttribute('id', 'num1');
-		input1.setAttribute('type', 'text');
-		input1.setAttribute('onkeyUp',"javascript:passarProx('campo1','campo2')");
-		
-		input2.setAttribute('type', 'text');
-		input2.setAttribute('id', 'num2');
-		input2.setAttribute('name', 'campo2');
-		input2.setAttribute('onkeyUp',"javascript:passarProx('campo2','campo1')");
-		input2.setAttribute('class', 'campo-text');
-		
-		input3.setAttribute('type', 'hidden');
-		input3.setAttribute('name', 'numero');
-		input3.setAttribute('id', 'num');
-		
-		
-		form.appendChild(input1);
-		form.appendChild(input2);
-		form.appendChild(input3);
-		tr.appendChild(td);
-		tr.appendChild(td3);
-		tr2.appendChild(td2);
-		td2.appendChild(form);
-		td3.appendChild(img);
-		tr2.appendChild(td2);
-		tbody.appendChild(tr);
-		tbody.appendChild(tr2);
-	}catch(erro){
-		alert("Erro: "+erro);
-	}
-}
-
-function ComponentsTelaDeputadoFederal(){
-	try{
-		document.getElementById('teste').innerHTML = "";
-		var tbody = document.getElementById('body-tela');
-		var tr = document.createElement('tr');
-		var td = document.createElement('td');
-		td.textContent = "Deputado Federal";
-		var td3 = document.createElement('td');
-		var img = document.createElement("img");
-		
-		var tr2 = document.createElement('tr');
-		var td2 = document.createElement('td');
-		
-		var form = document.createElement('form');
-		var input1 = document.createElement('input');
-		var input2 = document.createElement('input');
-		var input3 = document.createElement('input');
-		var input4 = document.createElement('input');
-		var input5 = document.createElement('input');
-		td.setAttribute('id', 'cargo');
-		
-		form.setAttribute('name', 'f1');
-		form.setAttribute('id', 'form');
-		form.setAttribute('method', 'post');
-		 
-		
-		input1.setAttribute('name', "campo1");
-		input1.setAttribute('class', "campo-text");
-		input1.setAttribute('id', 'num1');
-		input1.setAttribute('type', 'text');
-		input1.setAttribute('onkeyUp',"javascript:passarProx('campo1','campo2')");
-		
-		input2.setAttribute('type', 'text');
-		input2.setAttribute('id', 'num2');
-		input2.setAttribute('name', 'campo2');
-		input2.setAttribute('onkeyUp',"javascript:passarProx('campo2','campo1')");
-		input2.setAttribute('class', 'campo-text');
-		
-		input3.setAttribute('name', "campo3");
-		input3.setAttribute('class', "campo-text");
-		input3.setAttribute('id', 'num3');
-		input3.setAttribute('type', 'text');
-		input3.setAttribute('onkeyUp',"javascript:passarProx('campo3','campo2')");
-		
-		input4.setAttribute('type', 'text');
-		input4.setAttribute('id', 'num4');
-		input4.setAttribute('name', 'campo4');
-		input4.setAttribute('onkeyUp',"javascript:passarProx('campo4','campo3')");
-		input4.setAttribute('class', 'campo-text');
-		
-		input5.setAttribute('type', 'hidden');
-		input5.setAttribute('name', 'numero');
-		input5.setAttribute('id', 'num');
-		
-		
-		form.appendChild(input1);
-		form.appendChild(input2);
-		form.appendChild(input3);
-		form.appendChild(input4);
-		form.appendChild(input5);
-		tr.appendChild(td);
-		tr.appendChild(td3);
-		tr2.appendChild(td2);
-		td2.appendChild(form);
-		td3.appendChild(img);
-		tr2.appendChild(td2);
-		tbody.appendChild(tr);
-		tbody.appendChild(tr2);
-	}catch(erro){
-		alert("Erro: "+erro);
-	}
-}
-
-function ComponentsTelaDeputadoEstadual(){
-	try{
-		document.getElementById('teste').innerHTML = "";
-		var tbody = document.getElementById('body-tela');
-		var trLinha1 = document.createElement('tr');
-		var trLinha2 = document.createElement('tr');
-		var tdColuna1 = document.createElement('td');
-		tdColuna1.textContent = "Deputado Estadual";
-		var tdColuna2 = document.createElement('td');
-		var tdColuna3 = document.createElement('td');
-		var img = document.createElement("img");
-		
-		
-		var form = document.createElement('form');
-		var input1 = document.createElement('input');
-		var input2 = document.createElement('input');
-		var input3 = document.createElement('input');
-		var input4 = document.createElement('input');
-		var input5 = document.createElement('input');
-		var input6 = document.createElement('input');
-		
-		
-		tdColuna1.setAttribute('id', 'cargo');
-		form.setAttribute('name', 'f1');
-		form.setAttribute('id', 'form');
-		form.setAttribute('method', 'post');
-		 
-		
-		input1.setAttribute('name', "campo1");
-		input1.setAttribute('class', "campo-text");
-		input1.setAttribute('id', 'num1');
-		input1.setAttribute('type', 'text');
-		input1.setAttribute('onkeyUp',"javascript:passarProx('campo1','campo2')");
-		
-		input2.setAttribute('type', 'text');
-		input2.setAttribute('id', 'num2');
-		input2.setAttribute('name', 'campo2');
-		input2.setAttribute('onkeyUp',"javascript:passarProx('campo2','campo1')");
-		input2.setAttribute('class', 'campo-text');
-		
-		input3.setAttribute('name', "campo3");
-		input3.setAttribute('class', "campo-text");
-		input3.setAttribute('id', 'num3');
-		input3.setAttribute('type', 'text');
-		input3.setAttribute('onkeyUp',"javascript:passarProx('campo3','campo2')");
-		
-		input4.setAttribute('type', 'text');
-		input4.setAttribute('id', 'num4');
-		input4.setAttribute('name', 'campo4');
-		input4.setAttribute('onkeyUp',"javascript:passarProx('campo4','campo3')");
-		input4.setAttribute('class', 'campo-text');
-		
-		input5.setAttribute('type', 'text');
-		input5.setAttribute('id', 'num5');
-		input5.setAttribute('name', 'campo5');
-		input5.setAttribute('onkeyUp',"javascript:passarProx('campo5','campo1')");
-		input5.setAttribute('class', 'campo-text');
-		
-		input6.setAttribute('type', 'hidden');
-		input6.setAttribute('name', 'numero');
-		input6.setAttribute('id', 'num');
-		
-		
-		form.appendChild(input1);
-		form.appendChild(input2);
-		form.appendChild(input3);
-		form.appendChild(input4);
-		form.appendChild(input5);
-		form.appendChild(input6);
-		trLinha1.appendChild(tdColuna1);
-		trLinha1.appendChild(tdColuna3);
-		trLinha2.appendChild(tdColuna2);
-		tdColuna2.appendChild(form);
-		tdColuna3.appendChild(img);
-		trLinha2.appendChild(tdColuna2);
-		tbody.appendChild(trLinha1);
-		tbody.appendChild(trLinha2);
-	}catch(erro){
-		alert("Erro: "+erro);
-	}
-}
-
-function ComponentsTelaSenador(){
-	try{
-		document.getElementById('teste').innerHTML = "";
-		var tbody = document.getElementById('body-tela');
-		var tr = document.createElement('tr');
-		var td = document.createElement('td');
-		td.textContent = "Senador "+senador;
-		var td3 = document.createElement('td');
-		var img = document.createElement("img");
-		
-		var tr2 = document.createElement('tr');
-		var td2 = document.createElement('td');
-		
-		var form = document.createElement('form');
-		var input1 = document.createElement('input');
-		var input2 = document.createElement('input');
-		var input3 = document.createElement('input');
-		var input4 = document.createElement('input');
-		 
-		td.setAttribute('id', 'cargo');
-		
-		form.setAttribute('name', 'f1');
-		form.setAttribute('id', 'form');
-		form.setAttribute('method', 'post');
-		 
-		
-		input1.setAttribute('name', "campo1");
-		input1.setAttribute('class', "campo-text");
-		input1.setAttribute('id', 'num1');
-		input1.setAttribute('type', 'text');
-		input1.setAttribute('onkeyUp',"javascript:passarProx('campo1','campo2')");
-		
-		input2.setAttribute('type', 'text');
-		input2.setAttribute('id', 'num2');
-		input2.setAttribute('name', 'campo2');
-		input2.setAttribute('onkeyUp',"javascript:passarProx('campo2','campo1')");
-		input2.setAttribute('class', 'campo-text');
-		
-		input3.setAttribute('name', "campo3");
-		input3.setAttribute('class', "campo-text");
-		input3.setAttribute('id', 'num3');
-		input3.setAttribute('type', 'text');
-		input3.setAttribute('onkeyUp',"javascript:passarProx('campo3','campo2')");
-		
-		input4.setAttribute('type', 'hidden');
-		input4.setAttribute('name', 'numero');
-		input4.setAttribute('id', 'num');
-		
-		
-		form.appendChild(input1);
-		form.appendChild(input2);
-		form.appendChild(input3);
-		form.appendChild(input4);
-	 
-		tr.appendChild(td);
-		tr.appendChild(td3);
-		tr2.appendChild(td2);
-		td2.appendChild(form);
-		td3.appendChild(img);
-		tr2.appendChild(td2);
-		tbody.appendChild(tr);
-		tbody.appendChild(tr2);
 	}catch(erro){
 		alert("Erro: "+erro);
 	}
@@ -455,12 +179,20 @@ function passarValores(dados){
 		
 		tdColunaReferencsNome.textContent = "Nome ";
 		tdColunaReferencsPartido.textContent = "Partido ";
-		
-		
+		var id = dados.idCargo;
+		var cargoTxt = "";
+		var cargo = function(id){
+			for(var i = 0;i<arrayCargos.length;i++){
+				if(arrayCargos[i].id == id){
+					cargoTxt += arrayCargos[i].nome;
+					return cargoTxt;
+				}
+			}
+		}
 		pSeuVoto.textContent = "Seu voto para";
-		pCargo.textContent = dados.cargo.cargo;
+		pCargo.innerHTML = cargo(id);
 		pNome.textContent = dados.nome;
-		pPartido.textContent = dados.partido.sigla;
+		pPartido.textContent = "";
 		pTecla.textContent = "Aperte a Tecla";
 		pConfirma.textContent = "VERDE: para CONFIRMAR";
 		pCorrige.textContent = "LARANJA: para CORRIGIR";
@@ -470,7 +202,7 @@ function passarValores(dados){
 		img.src = dados.url;
 		img.setAttribute('width', '90px');
 		img.setAttribute('height', '90px');
-		if(dados.cargo.cargo == "Senador 1" || dados.cargo.cargo == "Senador 2"){
+		/*if(dados.cargo.cargo == "Senador 1" || dados.cargo.cargo == "Senador 2"){
 			if(dados.urlSuple1.length > 0 && dados.urlSuple2.length > 0){
 				imgSuple1.src = dados.urlSuple1;
 				imgSuple1.setAttribute('width', '100px');
@@ -492,7 +224,7 @@ function passarValores(dados){
 			tdColunaReferencsVice.textContent = "Vice candidato";
 			tdColunaViceNome.appendChild(pViceNome);
 			tdColunaImgVice.appendChild(imgVice);
-		}
+		}*/
 		
 		
 		trLinha1.appendChild(tdColunaSeuVoto);
@@ -540,59 +272,60 @@ function passarValores(dados){
 	
 }
 
-function criarComponentsTelaPresidente(){
+function criarComponentsTelaDinamica(cargo, numero){
+	try {
 	document.getElementById('teste').innerHTML = "";
+	if(numero !== undefined){
+		var n = numero.toString();
+	
 	var tbody = document.getElementById('body-tela');
-	var tr = document.createElement('tr');
+	var trLinha1 = document.createElement('tr');
+	var trLinha2 = document.createElement('tr');
 	var td = document.createElement('td');
-	td.textContent = "Presidente";
-	var td3 = document.createElement('td');
-	var img = document.createElement("img");
-	
-	
-	var tr2 = document.createElement('tr');
 	var td2 = document.createElement('td');
-	
-	var form = document.createElement('form');
-	var input4 = document.createElement('input');
-	var input5 = document.createElement('input');
-	var input6 = document.createElement('input');
+	var td3 = document.createElement('td');
+	td.textContent = cargo;
 	td.setAttribute('id', 'cargo');
-	
+	var form = document.createElement('form');
+	var input2 = document.createElement('input');
 	form.setAttribute('name', 'f1');
 	form.setAttribute('id', 'form');
 	form.setAttribute('method', 'post');
-	 
+	for(var i = 1;i<=n.length;i++){
+		if(i > 1){
+			var input = document.createElement('input');
+			input.setAttribute('name', "campo"+i);
+			input.setAttribute('class', "campo-text");
+			input.setAttribute('id', 'num'+i);
+			input.setAttribute('type', "text");
+			input.setAttribute('onkeyUp',"javascript:passarProx(campo"+i+",campo"+ant+")");
+			ant = i-1;
+		}else if(i == 1){
+			var input = document.createElement('input');
+			input.setAttribute('name', "campo"+i);
+			input.setAttribute('class', "campo-text");
+			input.setAttribute('id', 'num'+i);
+			input.setAttribute('type', "text");
+			input.setAttribute('onkeyUp',"javascript:passarProx(campo"+i+",campo"+(i+1)+")");
+		}
+		form.appendChild(input);
+	}
+	input2.setAttribute('type', 'hidden');
+	input2.setAttribute('name', 'numero');
+	input2.setAttribute('id', 'num');
 	
-	input4.setAttribute('name', "campo1");
-	input4.setAttribute('class', "campo-text");
-	input4.setAttribute('id', 'num1');
-	input4.setAttribute('type', 'text');
-	input4.setAttribute('onkeyUp',"javascript:passarProx('campo1','campo2')");
+	form.appendChild(input2);
 	
-	input5.setAttribute('type', 'text');
-	input5.setAttribute('id', 'num2');
-	input5.setAttribute('name', 'campo2');
-	input5.setAttribute('onkeyUp',"javascript:passarProx('campo2','campo1')");
-	input5.setAttribute('class', 'campo-text');
-	
-	input6.setAttribute('type', 'hidden');
-	input6.setAttribute('name', 'numero');
-	input6.setAttribute('id', 'num');
-	
-	
-	form.appendChild(input4);
-	form.appendChild(input5);
-	form.appendChild(input6);
-	
-	tr.appendChild(td);
-	tr.appendChild(td3);
-	tr2.appendChild(td2);
+	trLinha1.appendChild(td);
 	td2.appendChild(form);
-	td3.appendChild(img);
-	tr2.appendChild(td2);
-	tbody.appendChild(tr);
-	tbody.appendChild(tr2);
+	trLinha2.appendChild(td2);
+	tbody.appendChild(trLinha1);
+	tbody.appendChild(trLinha2);
+	}
+	} catch (e) {
+		alert("Erro: t "+e);
+	}
+	
 }
 
 function clearTelas(){
@@ -601,46 +334,6 @@ function clearTelas(){
 
 function telaTerminal(){
 	document.getElementById('teste').innerHTML = "Aguardando o terminal para a Votação";
-}
-
-function telaDeputadoFederal(){
-	try{
-		ComponentsTelaDeputadoFederal();
-	}catch(erro){
-		alert("Erro: "+erro);
-	}
-}
-
-function telaGovernador(){
-	try{
-		ComponentsTelaGovernador();
-	}catch(erro){
-		alert("Erro: "+erro)
-	}
-}
-
-function telaPresidente(){
-	try{
-		criarComponentsTelaPresidente();
-	}catch(erro){
-		alert("Erro: "+erro)
-	}
-}
-
-function telaDeputadoEstadual(){
-	try{
-		ComponentsTelaDeputadoEstadual();
-	}catch(erro){
-		alert("Erro: "+erro);
-	}
-}
-
-function telaSenador(){
-	try{
-		ComponentsTelaSenador();
-	}catch(erro){
-		alert("Erro: "+erro);
-	}
 }
 
 function telaFim(){
@@ -663,30 +356,66 @@ function telaBranco(cargo){
 
 
 $(document).ready(function(){
-	var servico = "http://localhost:9000/pegarCandidato/";
-	var servicoTerminal = "http://localhost:9000/pegarTerminal";
+	var servico = "";
+	var servicoTerminal = "https://urna-api.herokuapp.com/get-terminal";
+	var servicoTSE = "http://tse.vps.leandrorego.com/api/getCargos?idSecao=1";
+	$.getJSON(servicoTSE, function(cargos){	
+		try {
+			$.each(cargos, function(i, cargo){
+				var objetoCargo = {
+					id: cargo.id,
+					nome: cargo.nome,
+					candidatos: cargo.candidatos
+				}
+				$.each(objetoCargo.candidatos, function(i, candidato){
+					arrayNumeros.push(candidato.numero);
+				});
+				arrayCargos.push(objetoCargo);
+			});
+		} catch (e) {
+			alert("Erro: "+e);
+		}
+	});
+	
+	function pegarIdCargo(nome){
+		for(var i = 0;i<arrayCargos.length;i++){
+			if(arrayCargos[i].nome == nome){
+				return arrayCargos[i].id;
+			}
+		}
+	}
+	
+	function pegarNomeCargo(id){
+		for(var i = 0;i<arrayCargos.length;i++){
+			if(arrayCargos[i].id == id){
+				return arrayCargos[i].nome;
+			}
+		}
+	}
 	
 	function onUrnaDone(dados) {
 		try{
 			if(preencheu == true){
-				if(dados.string == "candidatoNaoExiste"){
+				if(dados.key=="Error"){
 					candidatoNaoEncontrado($("#cargo").text());
 					votoNull = true;
-				}
-				if(dados.cargo.cargo == $("#cargo").text()){
-					passarValores(dados);
-					partido = dados.partido.sigla;
-					numero = dados.numero.numero;
-					Cargo = dados.cargo.cargo;
-					nome = dados.nome;
-					votoValido = true;
 				}else {
-					candidatoNaoEncontrado($("#cargo").text());
-					votoNull = true;
+					passarValores(dados);
+					//partido = dados.partido.sigla;
+					numero = dados.numero;
+					Cargo = dados.idCargo;
+					votoValido = true;
 				}
 				preencheu = false;
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open("GET", 'http://meuip.com/api/meuip.php');
+				xmlhttp.send();
+				xmlhttp.onload = function(e) {
+					ipUrna = xmlhttp.response;
+				}
 			}
 		}catch(erro){
+			alert("Erro: "+erro);
 		}
 	}
 	
@@ -694,54 +423,31 @@ $(document).ready(function(){
 		try {
 			if(data.status == "liberada"){
 				iniciarVotacao = true;
-				if(controlador == 0){
-					clearTelas();
-					telaDeputadoEstadual();
-					preencheu = false;
-				}else if(controlador == 1){
-					clearTelas();
-					document.getElementById('demo1').play();
-					telaDeputadoFederal();
-					preencheu = false;
-				}else if(controlador == 2){
-					if(botaoCorrige == true){
-						clearTelas();
+				clearTelas();
+				if(controlador > 0){
+					if(botaoCorrige==false){
 						document.getElementById('demo1').play();
-						telaSenador();
-						preencheu = false;
-					}else{
-						clearTelas();
-						document.getElementById('demo1').play();
-						telaSenador();
-						preencheu = false;
 					}
-				}else if(controlador == 3){
-					senador = 2;
-					clearTelas();
-					document.getElementById('demo1').play();
-					telaSenador();
 					preencheu = false;
-				}else if(controlador == 4){
-					clearTelas();
-					document.getElementById('demo1').play();
-					telaGovernador();
-					preencheu = false;
-				}else if(controlador == 5){
-					clearTelas();
-					document.getElementById('demo1').play();
-					telaPresidente();
-					preencheu = false;
-				}else if(controlador == 6){
-					clearTelas();
-					document.getElementById('demo2').play();
+				}
+				if(arrayCargos.length-1 == controlador){
+					if(botaoCorrige==false){
+						document.getElementById('demo2').play();
+					}
 					telaFim();
 					encerrarVotacao = true;
 					controlador = 0;
-				}
+					preencheu = false;
+				}else{
+					criarComponentsTelaDinamica(arrayCargos[controlador].nome, arrayNumeros[controlador]);
+				}				
+				
+				
+				
 			}
 			
 		} catch (e) {
-			//alert(e);
+			alert("Erro: "+e);
 		}
 		
 	}
@@ -761,6 +467,7 @@ $(document).ready(function(){
 						}
 						else if(dados.status == "liberada"){
 							if(terminalLiberouUrna){
+								
 								$.getJSON(servicoTerminal)
 					        	.done(verificarUrna);
 								terminalLiberouUrna = false;
@@ -771,15 +478,24 @@ $(document).ready(function(){
 		        	
 		        }
 		        
-		    }, 1000);
+		    }, 100);
 		 
 	$("button").click(function(){
-		$.getJSON(servico + $("#num").val())
+		var parametros = {
+			idSecao: 1,
+			numero: $("#num").val(),
+			idCargo: pegarIdCargo($("#cargo").text())
+		}
+		$.getJSON("http://tse.vps.leandrorego.com/api/getCandidato", parametros)
     	.done(onUrnaDone);
 		cargo = $("#cargo").text();
     });
 	
 	$("#confirma").click(function(){
+		if(iniciarVotacao == false){
+			alert("Terminal não liberou a urna");
+		}else{
+
 		if(preencheuBool == false && encerrarVotacao == false){
 			alert("Preencha os campos!");
 		}else if(encerrarVotacao == true){
@@ -787,7 +503,8 @@ $(document).ready(function(){
 		}else if(votoNull == true){
 			clearTelas();
 			$.ajax({
-		          url : "http://localhost:9000/insert",
+		          //url : "https://urna-api.herokuapp.com/voto",
+				  url: "http://localhost:9002/voto",
 		          type : 'post',
 		          data : {
 		               partido : "Voto Nulo",
@@ -810,7 +527,7 @@ $(document).ready(function(){
 			preencheuBool = false;
 		}else if(votouBranco == true){
 			$.ajax({
-		          url : "http://localhost:9000/insert",
+		          url : "https://urna-api.herokuapp.com/voto",
 		          type : 'post',
 		          data : {
 		               partido : "Voto Branco",
@@ -832,13 +549,12 @@ $(document).ready(function(){
         	.done(verificarUrna);
         	votoValido = false;
 			$.ajax({
-		          url : "http://localhost:9000/insert",
+		          url : "http://localhost:9002/voto",
 		          type : 'post',
 		          data : {
-		               partido : partido,
-		               cargo : Cargo,
-		               numero: numero,
-		               nome: nome
+		               idCargo: Cargo,
+		               numCandidato: numero,
+		               idUrna: ipUrna
 		          },
 		          
 				})
@@ -851,9 +567,13 @@ $(document).ready(function(){
 			preencheu = false;
 			preencheuBool = false;
 		}
+	}	
 	});
 	
 	$("#corrige").click(function(){
+		if(iniciarVotacao == false){
+			alert("Terminal não liberou a urna");
+		}else{
 		if(encerrarVotacao == true){
 			alert("Votação Encerrada!");
 		}else{
@@ -867,10 +587,13 @@ $(document).ready(function(){
 			preencheuBool = false;
 			botaoCorrige = true;
 		}
-		
+		}
 	});
 	
 	$("#branco").click(function(){
+		if(iniciarVotacao == false){
+			alert("Terminal não liberou a urna");
+		}else{
 		if(encerrarVotacao == true){
 			alert("Votação Encerrada!");
 		}else{
@@ -886,6 +609,7 @@ $(document).ready(function(){
 			if(votoNull == true){
 				votoNull = false;
 			}
+		}
 		}
 	});
 	
