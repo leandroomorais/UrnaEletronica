@@ -352,10 +352,36 @@ function telaBranco(cargo){
 	}
 }
 
-
-
-
 $(document).ready(function(){
+	function createCORSRequest(method, url) {
+		  var xhr = new XMLHttpRequest();
+		  if ("withCredentials" in xhr) {
+
+		    // Check if the XMLHttpRequest object has a "withCredentials" property.
+		    // "withCredentials" only exists on XMLHTTPRequest2 objects.
+		    xhr.open(method, url, true);
+
+		  } else if (typeof XDomainRequest != "undefined") {
+
+		    // Otherwise, check if XDomainRequest.
+		    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+		    xhr = new XDomainRequest();
+		    xhr.open(method, url);
+
+		  } else {
+
+		    // Otherwise, CORS is not supported by the browser.
+		    xhr = null;
+
+		  }
+		  return xhr;
+		}
+		var url = 'https://urna-api.herokuapp.com/get-terminal';
+		var xhr = createCORSRequest('GET', url);
+		xhr.send();
+		var url2 = 'http://tse.vps.leandrorego.com/api/getCargos?idSecao=1';
+		var xhr2 = createCORSRequest('GET', url2);
+		xhr2.send();
 	var servico = "";
 	var servicoTerminal = "https://urna-api.herokuapp.com/get-terminal";
 	var servicoTSE = "http://tse.vps.leandrorego.com/api/getCargos?idSecao=1";
@@ -407,12 +433,12 @@ $(document).ready(function(){
 					votoValido = true;
 				}
 				preencheu = false;
-				/*var xmlhttp = new XMLHttpRequest();
+				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.open("GET", 'http://meuip.com/api/meuip.php');
 				xmlhttp.send();
 				xmlhttp.onload = function(e) {
 					ipUrna = xmlhttp.response;
-				}*/
+				}
 			}
 		}catch(erro){
 			alert("Erro: "+erro);
