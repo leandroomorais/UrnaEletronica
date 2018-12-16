@@ -21,4 +21,16 @@ public class UrnaClient extends Controller{
 		render();
 	}
 	
+	public static void listarCargos(long idSecao) {
+		HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/getCargos?idSecao="+idSecao).get();
+		String teste = response.getString();
+		renderJSON(teste);
+	}
+	
+	public static void pegarStatusUrna() {
+		HttpResponse response = WS.url("https://urna-api.herokuapp.com/get-terminal").get();
+		String teste = response.getString();
+		renderJSON(teste);
+	}
+	
 }

@@ -353,39 +353,10 @@ function telaBranco(cargo){
 }
 
 $(document).ready(function(){
-	function createCORSRequest(method, url) {
-		  var xhr = new XMLHttpRequest();
-		  if ("withCredentials" in xhr) {
-
-		    // Check if the XMLHttpRequest object has a "withCredentials" property.
-		    // "withCredentials" only exists on XMLHTTPRequest2 objects.
-		    xhr.open(method, url, true);
-
-		  } else if (typeof XDomainRequest != "undefined") {
-
-		    // Otherwise, check if XDomainRequest.
-		    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-		    xhr = new XDomainRequest();
-		    xhr.open(method, url);
-
-		  } else {
-
-		    // Otherwise, CORS is not supported by the browser.
-		    xhr = null;
-
-		  }
-		  return xhr;
-		}
-		var url = 'https://urna-api.herokuapp.com/get-terminal';
-		var xhr = createCORSRequest('GET', url);
-		xhr.send();
-		var url2 = 'http://tse.vps.leandrorego.com/api/getCargos?idSecao=1';
-		var xhr2 = createCORSRequest('GET', url2);
-		xhr2.send();
 	var servico = "";
-	var servicoTerminal = "https://urna-api.herokuapp.com/get-terminal";
-	var servicoTSE = "http://tse.vps.leandrorego.com/api/getCargos?idSecao=1";
-	$.getJSON(servicoTSE, function(cargos){	
+	var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
+	var servicoTSE = "https://urna-eletronica.herokuapp.com/listarCargos/1";
+	$.getJSON(servicoTSE).done(function(cargos){	
 		try {
 			$.each(cargos, function(i, cargo){
 				var objetoCargo = {
@@ -480,8 +451,7 @@ $(document).ready(function(){
  
 			var interval = setInterval(function () {
 		        if(iniciarUrna == true){
-		        	$.getJSON(servicoTerminal)
-		        	.done(function (dados) {
+		        	$.getJSON(servicoTerminal).done(function (dados) {
 						if(dados.status == "bloqueada"){
 							 if(terminalTravouUrna){
 								 clearTelas();
@@ -493,9 +463,7 @@ $(document).ready(function(){
 						}
 						else if(dados.status == "liberada"){
 							if(terminalLiberouUrna){
-								
-								$.getJSON(servicoTerminal)
-					        	.done(verificarUrna);
+								$.getJSON(servicoTerminal).done(verificarUrna);
 								terminalLiberouUrna = false;
 							}
 							terminalTravouUrna = false;
@@ -510,7 +478,7 @@ $(document).ready(function(){
 		var parametros = {
 			idSecao: 1,
 			numero: $("#num").val(),
-			idCargo: pegarIdCargo($("#cargo").text())
+			idCargo: pegarIdCargo($("#cargo").text()),
 		}
 		$.getJSON("http://tse.vps.leandrorego.com/api/getCandidato", parametros)
     	.done(onUrnaDone);

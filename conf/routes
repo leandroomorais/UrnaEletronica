@@ -6,6 +6,8 @@
 GET     /                                       UrnaClient.main
 GET		/pegarTerminal							UrnaClient.pegarTerminal
 GET		/pegarCandidato/{num}					UrnaClient.pegarCandidato
+GET     /pegarStatusUrna						UrnaClient.pegarStatusUrna
+GET		/listarCargos/{idSecao}							UrnaClient.listarCargos
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
