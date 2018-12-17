@@ -36,6 +36,7 @@ public class UrnaClient extends Controller{
 	}
 	
 	public static void pegarCandidato(long idSecao, int numero, long idCargo) {
+		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/getCandidato?idSecao="+idSecao+"&numero="+numero+"&idCargo="+idCargo).get();
 		String teste = response.getString();
 		renderJSON(teste);
@@ -43,12 +44,14 @@ public class UrnaClient extends Controller{
 	}
 	
 	public static void listarCargos(long idSecao) {
+		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/getCargos?idSecao="+idSecao).get();
 		String teste = response.getString();
 		renderJSON(teste);
 	}
 	
 	public static void pegarStatusUrna() {
+		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/get-terminal").get();
 		String teste = response.getString();
 		renderJSON(teste);
