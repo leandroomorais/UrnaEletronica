@@ -1,6 +1,8 @@
 package controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +21,18 @@ public class UrnaClient extends Controller{
 	
 	public static void main() {
 		render();
+	}
+	
+	public static void meuIp() {
+		HttpResponse response = WS.url("http://meuip.com/api/meuip.php").get();
+	}
+	
+	public static void enviarVoto(int numCandidato, int idCargo, String ipUrna, String voto) {
+		Map paramentros = new HashMap<>();
+		paramentros.put("numCandidato", numCandidato);
+		paramentros.put("idCargo", idCargo);
+		paramentros.put("ipUrna", ipUrna);
+		HttpResponse response = WS.url("https://urna-api.herokuapp.com/voto").setParameters(paramentros).post();
 	}
 	
 	public static void pegarCandidato(long idSecao, int numero, long idCargo) {

@@ -405,7 +405,7 @@ $(document).ready(function(){
 				}
 				preencheu = false;
 				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", 'http://meuip.com/api/meuip.php');
+				xmlhttp.open("GET", 'https://urna-eletronica.herokuapp.com/meuIp');
 				xmlhttp.send();
 				xmlhttp.onload = function(e) {
 					ipUrna = xmlhttp.response;
@@ -497,7 +497,7 @@ $(document).ready(function(){
 		}else if(votoNull == true){
 			clearTelas();
 			$.ajax({
-		          url : "https://urna-api.herokuapp.com/voto",
+		          url : "https://urna-eletronica.herokuapp.com/voto",
 		          type : 'post',
 		          data : {
 		        	   numCandidato: 0,
@@ -520,7 +520,7 @@ $(document).ready(function(){
 			preencheuBool = false;
 		}else if(votouBranco == true){
 			$.ajax({
-		          url : "https://urna-api.herokuapp.com/voto",
+		          url : "https://urna-eletronica.herokuapp.com/voto",
 		          type : 'post',
 		          data : {
 		        	  numCandidato: 0,
@@ -542,7 +542,7 @@ $(document).ready(function(){
         	.done(verificarUrna);
         	votoValido = false;
 			$.ajax({
-				  url : "https://urna-api.herokuapp.com/voto",
+				  url : "https://urna-eletronica.herokuapp.com/voto",
 		          type : 'post',
 		          data : {
 		               idCargo: Cargo,
