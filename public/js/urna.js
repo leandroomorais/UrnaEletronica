@@ -497,14 +497,13 @@ $(document).ready(function(){
 		}else if(votoNull == true){
 			clearTelas();
 			$.ajax({
-		          //url : "https://urna-api.herokuapp.com/voto",
-				  url: "http://localhost:9002/voto",
+		          url : "https://urna-api.herokuapp.com/voto",
 		          type : 'post',
 		          data : {
-		               partido : "Voto Nulo",
-		               cargo : "Voto Nulo",
-		               numero: -2,
-		               nome: "Voto Nulo"
+		        	   numCandidato: 0,
+		        	   idCargo: 0,
+		        	   ipUrna: 0,
+		               voto: "Nulo"
 		          },
 		          
 				})
@@ -524,10 +523,10 @@ $(document).ready(function(){
 		          url : "https://urna-api.herokuapp.com/voto",
 		          type : 'post',
 		          data : {
-		               partido : "Voto Branco",
-		               cargo : "Voto Branco",
-		               numero: -1,
-		               nome: "Voto Branco"
+		        	  numCandidato: 0,
+		        	   idCargo: 0,
+		        	   ipUrna: 0,
+		               voto: "Branco"
 		          },
 		          
 				})
@@ -543,12 +542,13 @@ $(document).ready(function(){
         	.done(verificarUrna);
         	votoValido = false;
 			$.ajax({
-		          url : "http://localhost:9002/voto",
+				  url : "https://urna-api.herokuapp.com/voto",
 		          type : 'post',
 		          data : {
 		               idCargo: Cargo,
 		               numCandidato: numero,
-		               idUrna: ipUrna
+		               idUrna: ipUrna,		               
+				       voto: "Valido"
 		          },
 		          
 				})
