@@ -427,7 +427,7 @@ $(document).ready(function(){
 					}
 					preencheu = false;
 				}
-				if(arrayCargos.length-1 == controlador){
+				if(arrayCargos.length == controlador){
 					if(botaoCorrige==false){
 						document.getElementById('demo2').play();
 					}
