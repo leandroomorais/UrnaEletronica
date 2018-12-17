@@ -5,7 +5,7 @@
 # Home page
 GET     /                                       UrnaClient.main
 GET		/pegarTerminal							UrnaClient.pegarTerminal
-GET		/pegarCandidato/{num}					UrnaClient.pegarCandidato
+GET		/pegarCandidato/{idSecao}/{numero}/{idCargo}					UrnaClient.pegarCandidato
 GET     /pegarStatusUrna						UrnaClient.pegarStatusUrna
 GET		/listarCargos/{idSecao}							UrnaClient.listarCargos
 

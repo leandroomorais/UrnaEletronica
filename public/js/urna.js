@@ -480,7 +480,7 @@ $(document).ready(function(){
 			numero: $("#num").val(),
 			idCargo: pegarIdCargo($("#cargo").text()),
 		}
-		$.getJSON("http://tse.vps.leandrorego.com/api/getCandidato", parametros)
+		$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/", parametros)
     	.done(onUrnaDone);
 		cargo = $("#cargo").text();
     });
