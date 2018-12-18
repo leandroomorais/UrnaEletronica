@@ -471,8 +471,6 @@ $(document).ready(function(){
 								 telaTerminal();
 								 terminalTravouUrna = false;
 								 terminalLiberouUrna = true;
-								 terminalCancelouVotacao = true;
-				        		 terminalFinalizouVotacao = true;
 							 }
 							 terminalTravouUrna = true;
 						}
@@ -480,10 +478,11 @@ $(document).ready(function(){
 							if(terminalLiberouUrna == true){
 								$.getJSON(servicoTerminal).done(verificarUrna);
 								terminalLiberouUrna = false;
-								terminalCancelouVotacao = true;
-			        			terminalFinalizouVotacao = true;
 							}
 							terminalTravouUrna = false;
+						}else if(dados.status == "erro"){
+							terminalCancelouVotacao = true;
+							terminalFinalizouVotacao = true;
 						}
 					});
 		        	$.getJSON(servicoUrnaFinalizada).done(function (dados){
@@ -493,14 +492,10 @@ $(document).ready(function(){
 		        				telaTerminalFinalizaVotacao();
 		        				terminalFinalizouVotacao = false;
 		        				terminalCancelouVotacao = false;
-		        				terminalLiberouUrna = false;
-		        				terminalTravouUrna = false;
 		        			}
 		        		}else if(dados.status == "0" || dados.status == "false"){
 		        			terminalFinalizouVotacao = true;
 		        			terminalCancelouVotacao = true;
-		        			terminalLiberouUrna = true;
-	        				terminalTravouUrna = true;
 		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
@@ -511,14 +506,10 @@ $(document).ready(function(){
 		        				telaTerminalCancelouVotacao();
 		        				terminalCancelouVotacao = false;
 		        				terminalFinalizouVotacao = false;
-		        				terminalLiberouUrna = false;
-		        				terminalTravouUrna = false;
 		        			}
 		        		}else if(dados.status == "0" || dados.status == "false"){
 		        			terminalCancelouVotacao = true;
 		        			terminalFinalizouVotacao = true;
-		        			terminalLiberouUrna = true;
-	        				terminalTravouUrna = true;
 		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
