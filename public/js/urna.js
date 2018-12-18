@@ -447,10 +447,6 @@ $(document).ready(function(){
 					telaFim();
 					encerrarVotacao = true;
 					controlador = 0;
-					terminalCancelouVotacao = true;
-					terminalFinalizouVotacao = true;
-					terminalLiberouUrna = true;
-					terminalTravouUrna = true;
 					preencheu = false;
 				}else{
 					criarComponentsTelaDinamica(arrayCargos[controlador].nome, arrayNumeros[controlador]);
@@ -496,6 +492,8 @@ $(document).ready(function(){
 		        				terminalLiberouUrna = true;
 		        				terminalTravouUrna = true;
 		        			}
+		        		}else if(dados.status == "0" || dados.status == "false"){
+		        			terminalFinalizouVotacao = true;
 		        		}
 		        	});
 		        	$.getJSON(servicoUrnaCancelada).done(function (dados){
@@ -508,6 +506,8 @@ $(document).ready(function(){
 		        				terminalLiberouUrna = true;
 		        				terminalTravouUrna = true;
 		        			}
+		        		}else if(dados.status == "0" || dados.status == "false"){
+		        			terminalCancelouVotacao = true;
 		        		}
 		        	});
 		        }
