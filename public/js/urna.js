@@ -471,6 +471,8 @@ $(document).ready(function(){
 								 telaTerminal();
 								 terminalTravouUrna = false;
 								 terminalLiberouUrna = true;
+								 terminalCancelouVotacao = true;
+				        		 terminalFinalizouVotacao = true;
 							 }
 							 terminalTravouUrna = true;
 						}
@@ -478,6 +480,8 @@ $(document).ready(function(){
 							if(terminalLiberouUrna){
 								$.getJSON(servicoTerminal).done(verificarUrna);
 								terminalLiberouUrna = false;
+								terminalCancelouVotacao = true;
+			        			terminalFinalizouVotacao = true;
 							}
 							terminalTravouUrna = false;
 						}
