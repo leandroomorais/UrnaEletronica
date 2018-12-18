@@ -488,13 +488,15 @@ $(document).ready(function(){
 		        				clearTelas();
 		        				telaTerminalFinalizaVotacao();
 		        				terminalFinalizouVotacao = false;
-		        				terminalCancelouVotacao = true;
-		        				terminalLiberouUrna = true;
-		        				terminalTravouUrna = true;
+		        				terminalCancelouVotacao = false;
+		        				terminalLiberouUrna = false;
+		        				terminalTravouUrna = false;
 		        			}
 		        		}else if(dados.status == "0" || dados.status == "false"){
 		        			terminalFinalizouVotacao = true;
-		        			terminalCancelouVotacao = false;
+		        			terminalCancelouVotacao = true;
+		        			terminalLiberouUrna = true;
+	        				terminalTravouUrna = true;
 		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
@@ -504,13 +506,15 @@ $(document).ready(function(){
 		        				clearTelas();
 		        				telaTerminalCancelouVotacao();
 		        				terminalCancelouVotacao = false;
-		        				terminalFinalizouVotacao = true;
-		        				terminalLiberouUrna = true;
-		        				terminalTravouUrna = true;
+		        				terminalFinalizouVotacao = false;
+		        				terminalLiberouUrna = false;
+		        				terminalTravouUrna = false;
 		        			}
 		        		}else if(dados.status == "0" || dados.status == "false"){
 		        			terminalCancelouVotacao = true;
-		        			terminalFinalizouVotacao = false;
+		        			terminalFinalizouVotacao = true;
+		        			terminalLiberouUrna = true;
+	        				terminalTravouUrna = true;
 		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
