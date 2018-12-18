@@ -466,7 +466,7 @@ $(document).ready(function(){
 		        if(iniciarUrna == true){
 		        	$.getJSON(servicoTerminal).done(function (dados) {
 						if(dados.status == "bloqueada"){
-							 if(terminalTravouUrna){
+							 if(terminalTravouUrna == true){
 								 clearTelas();
 								 telaTerminal();
 								 terminalTravouUrna = false;
@@ -477,7 +477,7 @@ $(document).ready(function(){
 							 terminalTravouUrna = true;
 						}
 						else if(dados.status == "liberada"){
-							if(terminalLiberouUrna){
+							if(terminalLiberouUrna == true){
 								$.getJSON(servicoTerminal).done(verificarUrna);
 								terminalLiberouUrna = false;
 								terminalCancelouVotacao = true;
@@ -488,7 +488,7 @@ $(document).ready(function(){
 					});
 		        	$.getJSON(servicoUrnaFinalizada).done(function (dados){
 		        		if(dados.status == "1" || dados.status == "true"){
-		        			if(terminalFinalizouVotacao){
+		        			if(terminalFinalizouVotacao == true){
 		        				clearTelas();
 		        				telaTerminalFinalizaVotacao();
 		        				terminalFinalizouVotacao = false;
@@ -506,7 +506,7 @@ $(document).ready(function(){
 		        	});
 		        	$.getJSON(servicoUrnaCancelada).done(function (dados){
 		        		if(dados.status == "1" || dados.status == "true"){
-		        			if(terminalCancelouVotacao){
+		        			if(terminalCancelouVotacao == true){
 		        				clearTelas();
 		        				telaTerminalCancelouVotacao();
 		        				terminalCancelouVotacao = false;
