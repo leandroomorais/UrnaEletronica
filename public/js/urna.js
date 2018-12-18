@@ -494,6 +494,7 @@ $(document).ready(function(){
 		        			}
 		        		}else if(dados.status == "0" || dados.status == "false"){
 		        			terminalFinalizouVotacao = true;
+		        			terminalCancelouVotacao = false;
 		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
@@ -509,6 +510,7 @@ $(document).ready(function(){
 		        			}
 		        		}else if(dados.status == "0" || dados.status == "false"){
 		        			terminalCancelouVotacao = true;
+		        			terminalFinalizouVotacao = false;
 		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
