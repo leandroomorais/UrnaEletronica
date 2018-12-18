@@ -476,7 +476,7 @@ $(document).ready(function(){
 							 }
 							 terminalTravouUrna = true;
 						}
-						else if(dados.status == "liberada"){
+						else if(dados.status == "liberada" && (terminalFinalizouVotacao == true  || terminalCancelouVotacao == true)){
 							if(terminalLiberouUrna){
 								$.getJSON(servicoTerminal).done(verificarUrna);
 								terminalLiberouUrna = false;
