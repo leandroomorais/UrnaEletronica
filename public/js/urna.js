@@ -531,10 +531,6 @@ $(document).ready(function(){
 	$("#confirma").click(function(){
 		if(iniciarVotacao == false){
 			alert("Terminal não liberou a urna");
-		}if(terminalCancelouVotacao == false){
-			alert("Terminal cancelou a votação");
-		}if(terminalFinalizouVotacao == false){
-			alert("Terminal finalizou a votação");
 		}else{
 
 			if(preencheuBool == false && encerrarVotacao == false){
@@ -614,10 +610,6 @@ $(document).ready(function(){
 	$("#corrige").click(function(){
 		if(iniciarVotacao == false){
 			alert("Terminal não liberou a urna");
-		}if(terminalCancelouVotacao == false){
-			alert("Terminal cancelou a votação");
-		}if(terminalFinalizouVotacao == false){
-			alert("Terminal finalizou a votação");
 		}else{
 			if(encerrarVotacao == true){
 				alert("Votação Encerrada!");
@@ -638,10 +630,6 @@ $(document).ready(function(){
 	$("#branco").click(function(){
 		if(iniciarVotacao == false){
 			alert("Terminal não liberou a urna");
-		}if(terminalCancelouVotacao == false){
-			alert("Terminal cancelou a votação");
-		}if(terminalFinalizouVotacao == false){
-			alert("Terminal finalizou a votação");
 		}else{
 			if(encerrarVotacao == true){
 				alert("Votação Encerrada!");
