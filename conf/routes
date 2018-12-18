@@ -10,6 +10,8 @@ GET     /pegarStatusUrna						UrnaClient.pegarStatusUrna
 GET		/listarCargos/{idSecao}							UrnaClient.listarCargos
 POST    /voto									UrnaClient.enviarVoto
 GET		/meuIp									UrnaClient.meuIp
+GET     /pegarStatusUrnaFinalizada				UrnaClient.pegarStatusUrnaFinalizada
+GET     /pegarStatusUrnaCancelada				UrnaClient.pegarStatusUrnaCancelada
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
