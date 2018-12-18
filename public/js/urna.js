@@ -19,8 +19,8 @@ var nome = "";
 var iniciarVotacao = false;
 var terminalTravouUrna = true;
 var terminalLiberouUrna = true;
-var terminalCancelouVotacao = true;
-var terminalFinalizouVotacao = true;
+var terminalCancelouVotacao = false;
+var terminalFinalizouVotacao = false;
 var botaoCorrige = false;
 var bloquearBotoes = false;
 var iniciarUrna = true;
@@ -476,7 +476,7 @@ $(document).ready(function(){
 							 }
 							 terminalTravouUrna = true;
 						}
-						else if(dados.status == "liberada" && (terminalFinalizouVotacao == true  || terminalCancelouVotacao == true)){
+						else if(dados.status == "liberada"){
 							if(terminalLiberouUrna){
 								$.getJSON(servicoTerminal).done(verificarUrna);
 								terminalLiberouUrna = false;
