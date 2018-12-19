@@ -30,6 +30,7 @@ public class UrnaClient extends Controller{
 	public static void pegarStatusUrnaFinalizada() {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/votacao-finalizada").get();
+		//HttpResponse response = WS.url("http://localhost:9002/votacao-finalizada").get();
 		String teste = response.getString();
 		renderJSON(teste);
 	}
@@ -37,6 +38,7 @@ public class UrnaClient extends Controller{
 	public static void pegarStatusUrnaCancelada() {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/cancela-votacao").get();
+		//HttpResponse response = WS.url("http://localhost:9002/cancela-votacao").get();
 		String teste = response.getString();
 		renderJSON(teste);
 	}
@@ -46,7 +48,9 @@ public class UrnaClient extends Controller{
 		paramentros.put("numCandidato", numCandidato);
 		paramentros.put("idCargo", idCargo);
 		paramentros.put("ipUrna", ipUrna);
+		paramentros.put("voto", voto);
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/voto").setParameters(paramentros).post();
+		//HttpResponse response = WS.url("http://localhost:9002/voto").setParameters(paramentros).post();
 	}
 	
 	public static void pegarCandidato(long idSecao, int numero, long idCargo) {
@@ -66,6 +70,7 @@ public class UrnaClient extends Controller{
 	public static void pegarStatusUrna() {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/get-terminal").get();
+		//HttpResponse response = WS.url("http://localhost:9002/get-terminal").get();
 		String teste = response.getString();
 		renderJSON(teste);
 	}

@@ -140,8 +140,9 @@ function candidatoNaoEncontrado(cargo){
 
 function passarValores(dados){
 	try {
-		clearTelas();
 		var tbody = document.getElementById('body-tela');
+		var form = document.getElementById("form");
+		clearTelas();
 		var trLinha1 = document.createElement('tr');
 		var trLinha2 = document.createElement('tr');
 		var trLinha3 = document.createElement('tr');
@@ -149,6 +150,7 @@ function passarValores(dados){
 		var trLinha5 = document.createElement('tr');
 		var trLinha6 = document.createElement('tr');
 		
+		var tdColunaForm = document.createElement('td');
 		var tdColunaSeuVoto = document.createElement('td');
 		var tdColunaCargo = document.createElement('td');
 		var tdColunaNome = document.createElement('td');
@@ -164,6 +166,7 @@ function passarValores(dados){
 		var tdColunaReferencsVice = document.createElement('td');
 		var tdColunaViceNome = document.createElement('td');
 		var tdColunaImgVice = document.createElement('td');
+		var tdColunaNumero = document.createElement('td');
 		
 		var pSeuVoto = document.createElement('p');
 		var pCargo = document.createElement('p');
@@ -173,7 +176,7 @@ function passarValores(dados){
 		var pConfirma = document.createElement('p');
 		var pCorrige = document.createElement('p');
 		var pViceNome = document.createElement('p');
-		
+		var pNumero = document.createElement('p');
 		
 		var img = document.createElement('img');
 		var imgSuple1 = document.createElement('img');
@@ -199,7 +202,7 @@ function passarValores(dados){
 		pTecla.textContent = "Aperte a Tecla";
 		pConfirma.textContent = "VERDE: para CONFIRMAR";
 		pCorrige.textContent = "LARANJA: para CORRIGIR";
-		
+		pNumero.textContent = "Número ";
 		pPartido.setAttribute('id', 'partido');
 		
 		img.src = dados.url;
@@ -231,11 +234,12 @@ function passarValores(dados){
 		
 		
 		trLinha1.appendChild(tdColunaSeuVoto);
-		trLinha2.appendChild(tdColunaReferencsNome);
-		trLinha3.appendChild(tdColunaReferencsPartido);
+		trLinha3.appendChild(tdColunaReferencsNome);
+		trLinha4.appendChild(tdColunaReferencsPartido);
 		
-		
+		tdColunaForm.appendChild(form);
 		tdColunaSeuVoto.appendChild(pSeuVoto);
+		tdColunaNumero.appendChild(pNumero);
 		tdColunaCargo.appendChild(pCargo);
 		tdColunaNome.appendChild(pNome);
 		tdColunaPartido.appendChild(pPartido);
@@ -247,8 +251,11 @@ function passarValores(dados){
 		trLinha1.appendChild(tdColunaSeuVoto);
 		trLinha1.appendChild(tdColunaCargo);
 		
-		trLinha2.appendChild(tdColunaNome);
-		trLinha3.appendChild(tdColunaPartido);
+		
+		trLinha3.appendChild(tdColunaNome);
+		trLinha2.appendChild(tdColunaNumero);
+		trLinha2.appendChild(tdColunaForm);
+		trLinha4.appendChild(tdColunaPartido);
 		trLinha1.appendChild(tdColunaFoto);
 		
 		trLinha3.appendChild(tdColunaSuple1);
@@ -365,9 +372,13 @@ function telaBranco(cargo){
 $(document).ready(function(){
 	var servico = "";
 	var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
+	//var servicoTerminal = "http://localhost:9000/pegarStatusUrna";
 	var servicoTSE = "https://urna-eletronica.herokuapp.com/listarCargos/1";
+	//var servicoTSE = "http://localhost:9000/listarCargos/1";
 	var servicoUrnaFinalizada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaFinalizada";
 	var servicoUrnaCancelada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaCancelada";
+	//var servicoUrnaFinalizada = "http://localhost:9000/pegarStatusUrnaFinalizada";
+	//var servicoUrnaCancelada = "http://localhost:9000/pegarStatusUrnaCancelada";
 	
 	$.getJSON(servicoTSE).done(function(cargos){	
 		try {
@@ -419,6 +430,7 @@ $(document).ready(function(){
 				preencheu = false;
 				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.open("GET", 'https://urna-eletronica.herokuapp.com/meuIp');
+				//xmlhttp.open("GET", 'http://localhost:9000/meuIp');
 				xmlhttp.send();
 				xmlhttp.onload = function(e) {
 					ipUrna = xmlhttp.response;
@@ -451,8 +463,6 @@ $(document).ready(function(){
 				}else{
 					criarComponentsTelaDinamica(arrayCargos[controlador].nome, arrayNumeros[controlador]);
 				}				
-				
-				
 				
 			}
 			
@@ -524,6 +534,7 @@ $(document).ready(function(){
 			idCargo: pegarIdCargo($("#cargo").text()),
 		}
 		$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/1"+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
+		//$.getJSON("http://localhost:9000/pegarCandidato/1"+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
     	.done(onUrnaDone);
 		cargo = $("#cargo").text();
     });
@@ -541,6 +552,7 @@ $(document).ready(function(){
 				clearTelas();
 				$.ajax({
 			          url : "https://urna-eletronica.herokuapp.com/voto",
+			          //url : "http://localhost:9000/voto",
 			          type : 'post',
 			          data : {
 			        	   numCandidato: 0,
@@ -558,12 +570,14 @@ $(document).ready(function(){
 				controlador++;
 				j = 0;
 				k = 0;
+				botaoCorrige = false;
 				num = "";
 				preencheu = false;
 				preencheuBool = false;
 			}else if(votouBranco == true){
 				$.ajax({
-			          url : "https://urna-eletronica.herokuapp.com/voto",
+					url : "https://urna-eletronica.herokuapp.com/voto",
+			        //  url : "http://localhost:9000/voto",
 			          type : 'post',
 			          data : {
 			        	  numCandidato: 0,
@@ -578,6 +592,7 @@ $(document).ready(function(){
 				$.getJSON(servicoTerminal)
 	        	.done(verificarUrna);
 	        	votouBranco = false;
+	        	botaoCorrige = false;
 				controlador++;
 			}else if(votoValido == true){
 				clearTelas();
@@ -585,12 +600,14 @@ $(document).ready(function(){
 	        	.done(verificarUrna);
 	        	votoValido = false;
 				$.ajax({
-					  url : "https://urna-eletronica.herokuapp.com/voto",
+					url : "https://urna-eletronica.herokuapp.com/voto",
+			        //  url : "http://localhost:9000/voto",
 			          type : 'post',
 			          data : {
 			               idCargo: Cargo,
 			               numCandidato: numero,
-			               idUrna: ipUrna,		               
+			               //idUrna: ipUrna,
+			               idUrna: 123,
 					       voto: "Valido"
 			          },
 			          
@@ -603,6 +620,7 @@ $(document).ready(function(){
 				num = "";
 				preencheu = false;
 				preencheuBool = false;
+				botaoCorrige = false;
 			}
 		}	
 	});
