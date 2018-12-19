@@ -1,5 +1,7 @@
 package controllers;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,4 +77,28 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
+	public static void setUrna(Long idSecao){
+		
+		try {
+			String ipUrna = InetAddress.getLocalHost().getHostAddress();
+			
+			Map param = new HashMap<>();
+			param.put("ipSecao", idSecao);
+			param.put("ipUrna", ipUrna);
+			
+			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")
+					.setParameters(param).post();
+			
+			if(response.success()){
+				
+			}else{
+				flash.error("Erro para setUrna");
+			}
+			
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }
