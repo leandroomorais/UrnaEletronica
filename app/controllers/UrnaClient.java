@@ -83,7 +83,7 @@ public class UrnaClient extends Controller{
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			
 			Map param = new HashMap<>();
-			param.put("ipSecao", idSecao);
+			param.put("idSecao", idSecao);
 			param.put("ipUrna", ipUrna);
 			
 			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")
