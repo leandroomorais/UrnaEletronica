@@ -25,8 +25,18 @@ public class UrnaClient extends Controller{
 		render();
 	}
 	
-	public static void meuIp() {
-		HttpResponse response = WS.url("http://meuip.com/api/meuip.php").get();
+	public static void enviarPedidoTempo() {
+		;
+		try {
+			String ipUrna = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//System.out.println(codUrna);
+		/*UrnaClient.response.accessControl("*");
+		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/tempoParaUrna").setParameter("codUrna", codUrna).post();*/
 	}
 	
 	public static void pegarStatusUrnaFinalizada() {
@@ -45,13 +55,18 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
-	public static void enviarVoto(int numCandidato, int idCargo, String ipUrna, String voto) {
-		Map paramentros = new HashMap<>();
-		paramentros.put("numCandidato", numCandidato);
-		paramentros.put("idCargo", idCargo);
-		paramentros.put("ipUrna", ipUrna);
-		paramentros.put("voto", voto);
-		HttpResponse response = WS.url("https://urna-api.herokuapp.com/voto").setParameters(paramentros).post();
+	public static void enviarVoto(int numCandidato, int idCargo, String voto) {
+		try {
+			String ipUrna = InetAddress.getLocalHost().getHostAddress();
+			Map paramentros = new HashMap<>();
+			paramentros.put("numCandidato", numCandidato);
+			paramentros.put("idCargo", idCargo);
+			paramentros.put("ipUrna", ipUrna);
+			paramentros.put("voto", voto);
+			HttpResponse response = WS.url("https://urna-api.herokuapp.com/voto").setParameters(paramentros).post();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		//HttpResponse response = WS.url("http://localhost:9002/voto").setParameters(paramentros).post();
 	}
 	
@@ -77,13 +92,12 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
-	public static void setUrna(Long idSecao){
-		
+	public static void setUrna(long idSecao){
 		try {
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			
 			Map param = new HashMap<>();
-			param.put("idSecao", idSecao);
+			param.put("ipSecao", idSecao);
 			param.put("ipUrna", ipUrna);
 			
 			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")

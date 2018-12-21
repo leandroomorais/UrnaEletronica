@@ -3,17 +3,16 @@
 # ~~~~
 
 # Home page
-GET		/										UrnaEletronica.index
-POST	/voto									UrnaEletronica.enviarVoto
-GET 	/get-terminal							UrnaEletronica.getTerminal
-POST 	/api/terminal							UrnaEletronica.setTerminal
-POST	/api/finaliza-votacao					UrnaEletronica.finalizarVotacao
-POST 	/api/cancela-votacao					UrnaEletronica.cancelharVotacao
-GET		/api/boletim						    UrnaEletronica.emitirBoletim
-POST	/api/secao      						UrnaEletronica.enviarSecao
-GET		/cancela-votacao						UrnaEletronica.getCancelarVotacao
-GET		/votacao-finalizada					    UrnaEletronica.getFinalizadaVotacao
-GET		/getSecao								UrnaEletronica.getSecao
+GET     /                                       UrnaClient.main
+GET		/pegarTerminal							UrnaClient.pegarTerminal
+GET		/pegarCandidato/{idSecao}/{numero}/{idCargo}					UrnaClient.pegarCandidato
+GET     /pegarStatusUrna						UrnaClient.pegarStatusUrna
+GET		/listarCargos/{idSecao}							UrnaClient.listarCargos
+POST    /voto									UrnaClient.enviarVoto
+GET		/meuIp									UrnaClient.meuIp
+GET     /pegarStatusUrnaFinalizada				UrnaClient.pegarStatusUrnaFinalizada
+GET     /pegarStatusUrnaCancelada				UrnaClient.pegarStatusUrnaCancelada
+POST    /enviarPedidoTempo						UrnaClient.enviarPedidoTempo
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

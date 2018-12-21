@@ -19,15 +19,18 @@ var nome = "";
 var iniciarVotacao = false;
 var terminalTravouUrna = true;
 var terminalLiberouUrna = true;
-var terminalCancelouVotacao = false;
-var terminalFinalizouVotacao = false;
+var terminalCancelouVotacao = true;
+var terminalFinalizouVotacao = true;
 var botaoCorrige = false;
+var botaoConfirmar = false;
 var bloquearBotoes = false;
 var iniciarUrna = true;
 var botaoBanco = false;
 var arrayCargos = [];
 var arrayNumeros = [];
 var ipUrna = "";
+var segundos = 0;
+var minutos = 0;
 
 function ComponentsTelaBranco(cargo){
 	try{
@@ -428,13 +431,6 @@ $(document).ready(function(){
 					votoValido = true;
 				}
 				preencheu = false;
-				var xmlhttp = new XMLHttpRequest();
-				xmlhttp.open("GET", 'https://urna-eletronica.herokuapp.com/meuIp');
-				//xmlhttp.open("GET", 'http://localhost:9000/meuIp');
-				xmlhttp.send();
-				xmlhttp.onload = function(e) {
-					ipUrna = xmlhttp.response;
-				}
 			}
 		}catch(erro){
 			alert("Erro: "+erro);
@@ -467,13 +463,36 @@ $(document).ready(function(){
 			}
 			
 		} catch (e) {
-			alert("Erro: "+e);
 		}
 		
 	}
  
 			var interval = setInterval(function () {
 		        if(iniciarUrna == true){
+		        	$.getJSON(servicoUrnaFinalizada).done(function (dados){
+		        		if(dados.status == 1){
+		        			if(terminalFinalizouVotacao == true){
+		        				clearTelas();
+		        				telaTerminalFinalizaVotacao();
+		        				terminalFinalizouVotacao = false;
+		        			}
+		        		}else if(dados.status == 0){
+		        			terminalFinalizouVotacao = true;
+		        			$.getJSON(servicoTerminal).done(verificarUrna);
+		        		}
+		        	});
+		        	$.getJSON(servicoUrnaCancelada).done(function (dados){
+		        		if(dados.status == 1){
+		        			if(terminalCancelouVotacao == true){
+		        				clearTelas();
+		        				telaTerminalCancelouVotacao();
+		        				terminalCancelouVotacao = false;
+		        			}
+		        		}else if(dados.status == 0){
+		        			terminalCancelouVotacao = true;
+		        			$.getJSON(servicoTerminal).done(verificarUrna);
+		        		}
+		        	});
 		        	$.getJSON(servicoTerminal).done(function (dados) {
 						if(dados.status == "bloqueada"){
 							 if(terminalTravouUrna == true){
@@ -481,48 +500,51 @@ $(document).ready(function(){
 								 telaTerminal();
 								 terminalTravouUrna = false;
 								 terminalLiberouUrna = true;
+								 controlador = 0;
+								 preencheu = false;
 							 }
 							 terminalTravouUrna = true;
 						}
 						else if(dados.status == "liberada"){
 							if(terminalLiberouUrna == true){
 								$.getJSON(servicoTerminal).done(verificarUrna);
-								terminalLiberouUrna = false;
+		        				terminalLiberouUrna = false;
 							}
 							terminalTravouUrna = false;
-						}else if(dados.status == "erro"){
+							if(botaoConfirmar == false){
+								if(segundos == 60){
+					        		minutos++;
+					        		segundos = 0;
+					        	}
+					        	segundos++;
+					        	console.log("Minutos: "+minutos+" Segundos: "+segundos);
+					        	if(minutos == 3){
+					        		$.ajax({
+										url : "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
+								        //url: "http://localhost:9000/enviarPedidoTempo",
+								          type : 'post',
+										})
+										.done(function(msg){
+										});
+					        		segundos = 0;
+					        		minutos = 0;
+					        	}
+							}else if(encerrarVotacao == true){
+								botaoConfirmar = true;
+								segundos = 0;
+								minutos = 0;
+							}else{
+								segundos = 0;
+				        		minutos = 0;
+				        		botaoConfirmar = false;
+							}
+						}else if(dados.status == "cancelou"){
 							terminalCancelouVotacao = true;
+						}else if(dados.status == "finalizou"){
 							terminalFinalizouVotacao = true;
 						}
 					});
-		        	$.getJSON(servicoUrnaFinalizada).done(function (dados){
-		        		if(dados.status == "1" || dados.status == "true"){
-		        			if(terminalFinalizouVotacao == true){
-		        				clearTelas();
-		        				telaTerminalFinalizaVotacao();
-		        				terminalFinalizouVotacao = false;
-		        				terminalCancelouVotacao = false;
-		        			}
-		        		}else if(dados.status == "0" || dados.status == "false"){
-		        			terminalFinalizouVotacao = true;
-		        			terminalCancelouVotacao = true;
-		        			$.getJSON(servicoTerminal).done(verificarUrna);
-		        		}
-		        	});
-		        	$.getJSON(servicoUrnaCancelada).done(function (dados){
-		        		if(dados.status == "1" || dados.status == "true"){
-		        			if(terminalCancelouVotacao == true){
-		        				clearTelas();
-		        				telaTerminalCancelouVotacao();
-		        				terminalCancelouVotacao = false;
-		        				terminalFinalizouVotacao = false;
-		        			}
-		        		}else if(dados.status == "0" || dados.status == "false"){
-		        			terminalCancelouVotacao = true;
-		        			terminalFinalizouVotacao = true;
-		        			$.getJSON(servicoTerminal).done(verificarUrna);
-		        		}
-		        	});
+		        	
 		        }
 		        
 		    }, 1000);
@@ -551,13 +573,12 @@ $(document).ready(function(){
 			}else if(votoNull == true){
 				clearTelas();
 				$.ajax({
-			          url : "https://urna-eletronica.herokuapp.com/voto",
+			          url: "https://urna-eletronica.herokuapp.com/voto",
 			          //url : "http://localhost:9000/voto",
-			          type : 'post',
-			          data : {
+			          type: 'post',
+			          data: {
 			        	   numCandidato: 0,
 			        	   idCargo: 0,
-			        	   ipUrna: 0,
 			               voto: "Nulo"
 			          },
 			          
@@ -574,15 +595,15 @@ $(document).ready(function(){
 				num = "";
 				preencheu = false;
 				preencheuBool = false;
+				botaoConfirmar = true;
 			}else if(votouBranco == true){
 				$.ajax({
-					url : "https://urna-eletronica.herokuapp.com/voto",
-			        //  url : "http://localhost:9000/voto",
-			          type : 'post',
-			          data : {
+					url: "https://urna-eletronica.herokuapp.com/voto",
+			        //url : "http://localhost:9000/voto",
+			          type: 'post',
+			          data: {
 			        	  numCandidato: 0,
 			        	   idCargo: 0,
-			        	   ipUrna: 0,
 			               voto: "Branco"
 			          },
 			          
@@ -593,6 +614,7 @@ $(document).ready(function(){
 	        	.done(verificarUrna);
 	        	votouBranco = false;
 	        	botaoCorrige = false;
+	        	botaoConfirmar = true;
 				controlador++;
 			}else if(votoValido == true){
 				clearTelas();
@@ -601,13 +623,11 @@ $(document).ready(function(){
 	        	votoValido = false;
 				$.ajax({
 					url : "https://urna-eletronica.herokuapp.com/voto",
-			        //  url : "http://localhost:9000/voto",
+			        //url : "http://localhost:9000/voto",
 			          type : 'post',
 			          data : {
 			               idCargo: Cargo,
 			               numCandidato: numero,
-			               //idUrna: ipUrna,
-			               idUrna: 123,
 					       voto: "Valido"
 			          },
 			          
@@ -621,6 +641,7 @@ $(document).ready(function(){
 				preencheu = false;
 				preencheuBool = false;
 				botaoCorrige = false;
+				botaoConfirmar = true;
 			}
 		}	
 	});
