@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,6 +14,7 @@ import com.google.gson.JsonElement;
 import models.Candidato;
 import models.CandidatoNaoExist;
 import models.Cargo;
+import models.IpUrna;
 import models.Status;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
@@ -20,23 +22,20 @@ import play.mvc.Controller;
 
 public class UrnaClient extends Controller{
 	private static final Gson g = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+	private static Random random = new Random();
 	
 	public static void main() {
 		render();
 	}
 	
+	public static void informaVotacaoFinalizada(String status) {
+		UrnaClient.response.accessControl("*");
+		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/finalizarVotacaoAtual").setParameter("status", status).post();
+	}
+	
 	public static void enviarPedidoTempo() {
-		;
-		try {
-			String ipUrna = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//System.out.println(codUrna);
-		/*UrnaClient.response.accessControl("*");
-		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/tempoParaUrna").setParameter("codUrna", codUrna).post();*/
+		UrnaClient.response.accessControl("*");
+		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/tempoParaUrna").setParameter("codUrna", random.nextLong()).post();
 	}
 	
 	public static void pegarStatusUrnaFinalizada() {
@@ -64,10 +63,11 @@ public class UrnaClient extends Controller{
 			paramentros.put("ipUrna", ipUrna);
 			paramentros.put("voto", voto);
 			HttpResponse response = WS.url("https://urna-api.herokuapp.com/voto").setParameters(paramentros).post();
+			//HttpResponse response = WS.url("http://localhost:9002/voto").setParameters(paramentros).post();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		//HttpResponse response = WS.url("http://localhost:9002/voto").setParameters(paramentros).post();
+		
 	}
 	
 	public static void pegarCandidato(long idSecao, int numero, long idCargo) {
@@ -92,12 +92,32 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
-	public static void setUrna(long idSecao){
+	public static void buscaSecao(String ipUrna) {
+		UrnaClient.response.accessControl("*");
+		HttpResponse response = WS.url("http://localhost:9002/getSecao/"+ipUrna).get();
+		String json = response.getString();
+		renderJSON(json);
+	}
+	
+	public static void ipUrna() {
+		try {
+			String ipUrna = InetAddress.getLocalHost().getHostAddress();
+			IpUrna ipUrna2 = new IpUrna();
+			ipUrna2.ipUrna = ipUrna;
+			ipUrna2.save();
+			String json = g.toJson(ipUrna2);
+			renderJSON(json);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	public static void setUrna(long ipSecao){
 		try {
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			
 			Map param = new HashMap<>();
-			param.put("ipSecao", idSecao);
+			param.put("ipSecao", ipSecao);
 			param.put("ipUrna", ipUrna);
 			
 			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")

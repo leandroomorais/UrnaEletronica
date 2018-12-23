@@ -1,6 +1,10 @@
 ﻿var j = 0;
 var k = 0;
 var s = 0;
+var id = 0;
+var secao = "";
+var evento = 0;
+var prox = 1;
 var ant = 1;
 var num = "";
 var cargo = "";
@@ -31,6 +35,10 @@ var arrayNumeros = [];
 var ipUrna = "";
 var segundos = 0;
 var minutos = 0;
+var enviarVotosCancelados = true;
+var arrayCargosPossiveis = [];
+var controleCargos = 0;
+
 
 function ComponentsTelaBranco(cargo){
 	try{
@@ -288,53 +296,67 @@ function passarValores(dados){
 function criarComponentsTelaDinamica(cargo, numero){
 	try {
 	document.getElementById('teste').innerHTML = "";
-	if(numero !== undefined){
-		var n = numero.toString();
-	
-	var tbody = document.getElementById('body-tela');
-	var trLinha1 = document.createElement('tr');
-	var trLinha2 = document.createElement('tr');
-	var td = document.createElement('td');
-	var td2 = document.createElement('td');
-	var td3 = document.createElement('td');
-	td.textContent = cargo;
-	td.setAttribute('id', 'cargo');
-	var form = document.createElement('form');
-	var input2 = document.createElement('input');
-	form.setAttribute('name', 'f1');
-	form.setAttribute('id', 'form');
-	form.setAttribute('method', 'post');
-	for(var i = 1;i<=n.length;i++){
-		if(i > 1){
-			var input = document.createElement('input');
-			input.setAttribute('name', "campo"+i);
-			input.setAttribute('class', "campo-text");
-			input.setAttribute('id', 'num'+i);
-			input.setAttribute('type', "text");
-			input.setAttribute('onkeyUp',"javascript:passarProx(campo"+i+",campo"+ant+")");
-			ant = i-1;
-		}else if(i == 1){
-			var input = document.createElement('input');
-			input.setAttribute('name', "campo"+i);
-			input.setAttribute('class', "campo-text");
-			input.setAttribute('id', 'num'+i);
-			input.setAttribute('type', "text");
-			input.setAttribute('onkeyUp',"javascript:passarProx(campo"+i+",campo"+(i+1)+")");
+	if(numero == 0){
+		var tbody = document.getElementById('body-tela');
+		var trLinha1 = document.createElement('tr');
+		var trLinha2 = document.createElement('tr');
+		var td = document.createElement('td');
+		var td2 = document.createElement('td');
+		var td3 = document.createElement('td');
+		td.textContent = cargo;
+		td.setAttribute('id', 'cargo');
+		trLinha1.appendChild(td);
+		tbody.appendChild(trLinha1);
+	}else{
+		if(numero !== undefined){
+			var n = numero.toString();
+		
+		var tbody = document.getElementById('body-tela');
+		var trLinha1 = document.createElement('tr');
+		var trLinha2 = document.createElement('tr');
+		var td = document.createElement('td');
+		var td2 = document.createElement('td');
+		var td3 = document.createElement('td');
+		td.textContent = cargo;
+		td.setAttribute('id', 'cargo');
+		var form = document.createElement('form');
+		var input2 = document.createElement('input');
+		form.setAttribute('name', 'f1');
+		form.setAttribute('id', 'form');
+		form.setAttribute('method', 'post');
+		for(var i = 1;i<=n.length;i++){
+			if(i > 1){
+				var input = document.createElement('input');
+				input.setAttribute('name', "campo"+i);
+				input.setAttribute('class', "campo-text");
+				input.setAttribute('id', 'num'+i);
+				input.setAttribute('type', "text");
+				input.setAttribute('onkeyUp',"javascript:passarProx(campo"+i+",campo"+ant+")");
+				ant = i-1;
+			}else if(i == 1){
+				var input = document.createElement('input');
+				input.setAttribute('name', "campo"+i);
+				input.setAttribute('class', "campo-text");
+				input.setAttribute('id', 'num'+i);
+				input.setAttribute('type', "text");
+				input.setAttribute('onkeyUp',"javascript:passarProx(campo"+i+",campo"+(i+1)+")");
+			}
+			form.appendChild(input);
 		}
-		form.appendChild(input);
+		input2.setAttribute('type', 'hidden');
+		input2.setAttribute('name', 'numero');
+		input2.setAttribute('class', "campo-text");
+		input2.setAttribute('id', 'num');
+		form.appendChild(input2);
+		
+		trLinha1.appendChild(td);
+		td2.appendChild(form);
+		trLinha2.appendChild(td2);
+		tbody.appendChild(trLinha1);
+		tbody.appendChild(trLinha2);
+		}
 	}
-	input2.setAttribute('type', 'hidden');
-	input2.setAttribute('name', 'numero');
-	input2.setAttribute('id', 'num');
-	
-	form.appendChild(input2);
-	
-	trLinha1.appendChild(td);
-	td2.appendChild(form);
-	trLinha2.appendChild(td2);
-	tbody.appendChild(trLinha1);
-	tbody.appendChild(trLinha2);
-	}
+		
 	} catch (e) {
 		alert("Erro: t "+e);
 	}
@@ -373,29 +395,64 @@ function telaBranco(cargo){
 }
 
 $(document).ready(function(){
+	
 	var servico = "";
 	var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
 	//var servicoTerminal = "http://localhost:9000/pegarStatusUrna";
-	var servicoTSE = "https://urna-eletronica.herokuapp.com/listarCargos/1";
+	var servicoTSE = "";
 	//var servicoTSE = "http://localhost:9000/listarCargos/1";
 	var servicoUrnaFinalizada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaFinalizada";
 	var servicoUrnaCancelada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaCancelada";
 	//var servicoUrnaFinalizada = "http://localhost:9000/pegarStatusUrnaFinalizada";
 	//var servicoUrnaCancelada = "http://localhost:9000/pegarStatusUrnaCancelada";
+	var servicoUrnaIp = "https://urna-eletronica.herokuapp.com/ipUrna";
 	
-	$.getJSON(servicoTSE).done(function(cargos){	
+	function pegarIp(){
+		$.getJSON(servicoUrnaIp).done(function (ip){
+			return ip.ipUrna;
+		});
+	}
+	
+	$.getJSON("https://urna-eletronica.herokuapp.com/buscaSecao/"+pegarIp()).done(function (secao){
+		var secao = secao.secao;
+		consolo.log(secao);
+	});
+	
+	$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos"+"/"+secao).done(function(cargos){	
 		try {
-			$.each(cargos, function(i, cargo){
-				var objetoCargo = {
-					id: cargo.id,
-					nome: cargo.nome,
-					candidatos: cargo.candidatos
+			arrayCargosPossiveis.push("Deputado Federal");
+			arrayCargosPossiveis.push("Deputador Estadual");
+			arrayCargosPossiveis.push("Senador");
+			arrayCargosPossiveis.push("Governador");
+			arrayCargosPossiveis.push("Presidente");
+			arrayCargosPossiveis.push("Prefeito");
+			arrayCargosPossiveis.push("Vereador");
+			var teste = 0;
+			while(arrayCargos.length < cargos.length){
+				if(cargos[teste].nome == arrayCargosPossiveis[controleCargos]){
+					var objetoCargo = {
+							id: cargos[teste].id,
+							nome: cargos[teste].nome,
+							candidatos: cargos[teste].candidatos
+						}
+						$.each(objetoCargo.candidatos, function(i, candidato){
+							var objetoCandidato = {
+								id: candidato.id,
+								numero: candidato.numero,
+								idCargo: candidato.idCargo,
+							}
+							arrayNumeros.push(objetoCandidato);
+						});
+						
+						arrayCargos.push(objetoCargo);
+						controleCargos++;
+						teste = 0;
+				}else{
+					teste++;
 				}
-				$.each(objetoCargo.candidatos, function(i, candidato){
-					arrayNumeros.push(candidato.numero);
-				});
-				arrayCargos.push(objetoCargo);
-			});
+				
+			}
+			
 		} catch (e) {
 			alert("Erro: "+e);
 		}
@@ -437,6 +494,15 @@ $(document).ready(function(){
 		}
 	}
 	
+	function verificarCargoNumero(idCargo){
+		for(var i = 0;i<arrayNumeros.length;i++){
+			if(arrayNumeros[i].idCargo == idCargo){
+				return arrayNumeros[i].numero;
+			}
+		}
+		return 0;
+	}
+	
 	function verificarUrna(data){
 		try {
 			if(data.status == "liberada"){
@@ -457,15 +523,15 @@ $(document).ready(function(){
 					controlador = 0;
 					preencheu = false;
 				}else{
-					criarComponentsTelaDinamica(arrayCargos[controlador].nome, arrayNumeros[controlador]);
+					criarComponentsTelaDinamica(arrayCargos[controlador].nome, verificarCargoNumero(arrayCargos[controlador].id));
 				}				
-				
 			}
-			
 		} catch (e) {
 		}
 		
 	}
+	
+	
  
 			var interval = setInterval(function () {
 		        if(iniciarUrna == true){
@@ -475,10 +541,9 @@ $(document).ready(function(){
 		        				clearTelas();
 		        				telaTerminalFinalizaVotacao();
 		        				terminalFinalizouVotacao = false;
+		        				enviarVotosCancelados = true;
+		        				controlador = 0;
 		        			}
-		        		}else if(dados.status == 0){
-		        			terminalFinalizouVotacao = true;
-		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
 		        	$.getJSON(servicoUrnaCancelada).done(function (dados){
@@ -487,10 +552,25 @@ $(document).ready(function(){
 		        				clearTelas();
 		        				telaTerminalCancelouVotacao();
 		        				terminalCancelouVotacao = false;
+		        				if(enviarVotosCancelados == true){
+		        					enviarVotosCancelados = false;
+		        					for(var i = 0;i<arrayCargos.length - controlador;i++){
+			        					$.ajax({
+			        				          url: "https://urna-eletronica.herokuapp.com/voto",
+			        				          //url: "http://localhost:9000/voto",
+			        				          type: 'post',
+			        				          data: {
+			        				        	   numCandidato: 0,
+			        				        	   idCargo: 0,
+			        				               voto: "Nulo"
+			        				          },
+			        				          
+			        						})
+			        						.done(function(msg){
+			        						});
+			        				}
+		        				}
 		        			}
-		        		}else if(dados.status == 0){
-		        			terminalCancelouVotacao = true;
-		        			$.getJSON(servicoTerminal).done(verificarUrna);
 		        		}
 		        	});
 		        	$.getJSON(servicoTerminal).done(function (dados) {
@@ -508,19 +588,15 @@ $(document).ready(function(){
 						else if(dados.status == "liberada"){
 							if(terminalLiberouUrna == true){
 								$.getJSON(servicoTerminal).done(verificarUrna);
+								
 		        				terminalLiberouUrna = false;
 							}
 							terminalTravouUrna = false;
 							if(botaoConfirmar == false){
-								if(segundos == 60){
-					        		minutos++;
-					        		segundos = 0;
-					        	}
 					        	segundos++;
-					        	console.log("Minutos: "+minutos+" Segundos: "+segundos);
-					        	if(minutos == 3){
+					        	if(segundos == 30){
 					        		$.ajax({
-										url : "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
+										url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
 								        //url: "http://localhost:9000/enviarPedidoTempo",
 								          type : 'post',
 										})
@@ -555,7 +631,7 @@ $(document).ready(function(){
 			numero: $("#num").val(),
 			idCargo: pegarIdCargo($("#cargo").text()),
 		}
-		$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/1"+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
+		$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/"+secao+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
 		//$.getJSON("http://localhost:9000/pegarCandidato/1"+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
     	.done(onUrnaDone);
 		cargo = $("#cargo").text();
@@ -574,7 +650,7 @@ $(document).ready(function(){
 				clearTelas();
 				$.ajax({
 			          url: "https://urna-eletronica.herokuapp.com/voto",
-			          //url : "http://localhost:9000/voto",
+			          //url: "http://localhost:9000/voto",
 			          type: 'post',
 			          data: {
 			        	   numCandidato: 0,
@@ -585,12 +661,23 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
+				$.ajax({
+					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+			          type : 'post',
+			          data : {
+			               status: "finalizado"
+			          },
+					})
+					.done(function(msg){
+					});
 				$.getJSON(servicoTerminal)
 	        	.done(verificarUrna);
 	        	votoNull = false;
 				controlador++;
 				j = 0;
 				k = 0;
+				evento = 0;
 				botaoCorrige = false;
 				num = "";
 				preencheu = false;
@@ -599,7 +686,7 @@ $(document).ready(function(){
 			}else if(votouBranco == true){
 				$.ajax({
 					url: "https://urna-eletronica.herokuapp.com/voto",
-			        //url : "http://localhost:9000/voto",
+			        //url: "http://localhost:9000/voto",
 			          type: 'post',
 			          data: {
 			        	  numCandidato: 0,
@@ -610,20 +697,34 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
+				$.ajax({
+					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+			          type : 'post',
+			          data : {
+			               status: "finalizado"
+			          },
+					})
+					.done(function(msg){
+					});
 				$.getJSON(servicoTerminal)
 	        	.done(verificarUrna);
 	        	votouBranco = false;
 	        	botaoCorrige = false;
 	        	botaoConfirmar = true;
 				controlador++;
+				j = 0;
+				k = 0;
+				evento = 0;
+				num = "";
 			}else if(votoValido == true){
 				clearTelas();
 				$.getJSON(servicoTerminal)
 	        	.done(verificarUrna);
 	        	votoValido = false;
 				$.ajax({
-					url : "https://urna-eletronica.herokuapp.com/voto",
-			        //url : "http://localhost:9000/voto",
+					url: "https://urna-eletronica.herokuapp.com/voto",
+			        //url: "http://localhost:9000/voto",
 			          type : 'post',
 			          data : {
 			               idCargo: Cargo,
@@ -634,9 +735,20 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
+				$.ajax({
+					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+			          type : 'post',
+			          data : {
+			               status: "finalizado"
+			          },
+					})
+					.done(function(msg){
+					});
 				controlador++;
 				j = 0;
 				k = 0;
+				evento = 0;
 				num = "";
 				preencheu = false;
 				preencheuBool = false;
@@ -658,6 +770,7 @@ $(document).ready(function(){
 				.done(verificarUrna);
 				j = 0;
 				k = 0;
+				evento = 0;
 				num = "";
 				preencheu = false;
 				preencheuBool = false;
@@ -678,6 +791,7 @@ $(document).ready(function(){
 				telaBranco(cargo);
 				j = 0;
 				k = 0;
+				evento = 0;
 				num = "";
 				preencheu = false;
 				botaoBanco = true;
@@ -691,7 +805,6 @@ $(document).ready(function(){
 	
 	
   });	
-
 
 function setarValorComponents(element,id){
 	var array = document.getElementById(element);
