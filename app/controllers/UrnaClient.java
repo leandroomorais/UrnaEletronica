@@ -11,11 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
-import models.Candidato;
-import models.CandidatoNaoExist;
-import models.Cargo;
 import models.IpUrna;
-import models.Status;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
 import play.mvc.Controller;
@@ -54,11 +50,13 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
-	public static void enviarVoto(int numCandidato, int idCargo, String voto) {
+	public static void enviarVoto(int numCandidato, int idCargo, String nome,  String voto) {
 		try {
+			UrnaClient.response.accessControl("*");
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			Map paramentros = new HashMap<>();
 			paramentros.put("numCandidato", numCandidato);
+			paramentros.put("nome", nome);
 			paramentros.put("idCargo", idCargo);
 			paramentros.put("ipUrna", ipUrna);
 			paramentros.put("voto", voto);
@@ -77,7 +75,7 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
-	public static void listarCargos(long idSecao) {
+	public static void listarCargos(String idSecao) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/getCargos?idSecao="+idSecao).get();
 		String teste = response.getString();
@@ -94,7 +92,8 @@ public class UrnaClient extends Controller{
 	
 	public static void buscaSecao(String ipUrna) {
 		UrnaClient.response.accessControl("*");
-		HttpResponse response = WS.url("http://localhost:9002/getSecao/"+ipUrna).get();
+		HttpResponse response = WS.url("https://urna-api.herokuapp.com/getSecao/"+ipUrna).get();
+		//HttpResponse response = WS.url("http://localhost:9002/getSecao/"+ipUrna).get();
 		String json = response.getString();
 		renderJSON(json);
 	}
@@ -112,12 +111,12 @@ public class UrnaClient extends Controller{
 		}
 	}
 	
-	public static void setUrna(long ipSecao){
+	public static void setUrna(long idSecao){
 		try {
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			
 			Map param = new HashMap<>();
-			param.put("ipSecao", ipSecao);
+			param.put("idSecao", idSecao);
 			param.put("ipUrna", ipUrna);
 			
 			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")
@@ -130,7 +129,6 @@ public class UrnaClient extends Controller{
 			}
 			
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
