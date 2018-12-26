@@ -12,6 +12,10 @@ POST    /voto									UrnaClient.enviarVoto
 GET		/meuIp									UrnaClient.meuIp
 GET     /pegarStatusUrnaFinalizada				UrnaClient.pegarStatusUrnaFinalizada
 GET     /pegarStatusUrnaCancelada				UrnaClient.pegarStatusUrnaCancelada
+POST    /enviarPedidoTempo						UrnaClient.enviarPedidoTempo
+POST	/informaVotacaoFinalizada				UrnaClient.informaVotacaoFinalizada
+GET		/buscaSecao/{ipUrna}					UrnaClient.buscaSecao
+GET		/ipUrna									UrnaClient.ipUrna
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
