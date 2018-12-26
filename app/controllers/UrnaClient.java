@@ -100,6 +100,7 @@ public class UrnaClient extends Controller{
 	
 	public static void ipUrna() {
 		try {
+			UrnaClient.response.accessControl("*");
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			IpUrna ipUrna2 = new IpUrna();
 			ipUrna2.ipUrna = ipUrna;
@@ -113,6 +114,7 @@ public class UrnaClient extends Controller{
 	
 	public static void setUrna(long idSecao){
 		try {
+			UrnaClient.response.accessControl("*");
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			
 			Map param = new HashMap<>();
