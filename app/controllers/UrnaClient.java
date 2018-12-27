@@ -24,6 +24,19 @@ public class UrnaClient extends Controller{
 		render();
 	}
 	
+	public static void enviarIpUrna(String ipUrna) {
+		UrnaClient.response.accessControl("*");
+		HttpResponse response = WS.url("https://urna-api.herokuapp.com/receberIpUrna").setParameter("ipUrna", ipUrna).post();
+		//HttpResponse response = WS.url("http://localhost:9002/receberIpUrna").setParameter("ipUrna", ipUrna).post();
+		if(response.success()) {
+			String teste = response.getString();
+			renderJSON(teste);
+		}else {
+			String teste = response.getString();
+			renderJSON(teste);
+		}
+	}
+	
 	public static void informaVotacaoFinalizada(String status) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/finalizarVotacaoAtual").setParameter("status", status).post();

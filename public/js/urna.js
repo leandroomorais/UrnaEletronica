@@ -3,11 +3,13 @@ var k = 0;
 var s = 0;
 var id = 0;
 var idSecao = "";
+var incremento = 1;
 var evento = 0;
 var prox = 1;
 var ant = 1;
 var num = "";
 var cargo = "";
+var cargoSenador = false;
 var preencheu = false;
 var preencheuBool = false;
 var controlador = 0;
@@ -20,6 +22,7 @@ var partido = "";
 var numero = "";
 var	Cargo = ""; 
 var nome = "";
+var enviouSecao = false;
 var iniciarVotacao = false;
 var terminalTravouUrna = true;
 var terminalLiberouUrna = true;
@@ -380,7 +383,11 @@ function telaTerminalCancelouVotacao(){
 }
 
 function telaErro(){
-	document.getElementById('teste').innerHTML = "Erro na Urna";
+	document.getElementById('teste').innerHTML = "Ip da urna não está vingulado a seção";
+}
+
+function telaIpExist(){
+	document.getElementById('teste').innerHTML = "Ip da urna já está vinculado, tente outra máquina";
 }
 function telaFim(){
 	try{
@@ -411,12 +418,14 @@ $(document).ready(function(){
 	//var servicoUrnaCancelada = "http://localhost:9000/pegarStatusUrnaCancelada";
 	//var servicoUrnaIp = "https://urna-eletronica.herokuapp.com/ipUrna";
 	
-	$.getJSON("https://urna-eletronica.herokuapp.com/ipUrna").done(ipUrna);
+	/*$.getJSON("https://urna-eletronica.herokuapp.com/ipUrna").done(ipUrna);
 	$.getJSON("https://urna-eletronica.herokuapp.com/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
-	$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
-		/*$.getJSON("http://localhost:9000/ipUrna").done(ipUrna);
-		$.getJSON("http://localhost:9000/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
-		$.getJSON("http://localhost:9000/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){*/
+	$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){*/
+		$.getJSON("https://urna-eletronica.herokuapp.com/ipUrna").done(ipUrna);
+		setInterval(function () {
+			$.getJSON("https://urna-eletronica.herokuapp.com/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
+		}, 1000);
+		$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
 		try {
 			arrayCargosPossiveis.push("Deputado Federal");
 			arrayCargosPossiveis.push("Deputador Estadual");
@@ -514,7 +523,18 @@ $(document).ready(function(){
 					controlador = 0;
 					preencheu = false;
 				}else{
-					criarComponentsTelaDinamica(arrayCargos[controlador].nome, verificarCargoNumero(arrayCargos[controlador].id));
+					if(arrayCargos[controlador].nome == "Senador"){
+						cargoSenador = true;
+						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
+						incremento++;
+					}else if(cargoSenador == true){
+						controlador--;
+						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
+						incremento = 1;
+						cargoSenador = false;
+					}else{
+						criarComponentsTelaDinamica(arrayCargos[controlador].nome, verificarCargoNumero(arrayCargos[controlador].id));
+					}
 				}				
 			}
 		} catch (e) {
@@ -527,22 +547,42 @@ $(document).ready(function(){
 		localStorage.setItem("ipUrna", ipUrna);
 	}
 	
+	$.ajax({
+        url: "https://urna-eletronica.herokuapp.com/enviarIpUrna",
+        //url: "http://localhost:9000/enviarIpUrna",
+        type: 'post',
+        data: {
+        	ipUrna: localStorage.getItem("ipUrna"),
+        },
+        async: false,
+        error: function(data){
+        	clearTelas();
+        	telaIpExist();
+        },
+		});
+	
 	function pegarSecao(secao){
-		try {
-			if(secao.status == "Ip não vingulado"){
-				clearTelas();
-				telaErro();
+		if(enviouSecao == false){
+			try {
+				console.log(secao.status);
+				if(secao.status == "Ip da urna não está vingulado a seção"){
+					clearTelas();
+					telaErro();
+				}else{
+					var objetoSecao = {
+						secao: secao.secao,
+					}
+					$.each(objetoSecao.secao, function(i, secao){
+						idSecao = secao.secao;
+					});
+					localStorage.setItem("idSecao", idSecao);
+					enviouSecao = true;
+					clearTelas();
+					telaTerminal();
+				}
+			} catch (e) {
+				console.log("Erro: "+e);
 			}
-			var objetoSecao = {
-				secao: secao.secao,
-			}
-			$.each(objetoSecao.secao, function(i, secao){
-				idSecao = secao.secao;
-				
-			});
-			localStorage.setItem("idSecao", idSecao);	
-		} catch (e) {
-			console.log("Erro: "+e);
 		}
 	}
 	
@@ -607,6 +647,7 @@ $(document).ready(function(){
 					}
 					terminalTravouUrna = false;
 					if(botaoConfirmar == false){
+						console.log("Segundos: "+segundos);
 			        	segundos++;
 			        	if(segundos == 30){
 			        		$.ajax({
@@ -649,15 +690,14 @@ $(document).ready(function(){
         
 		}).done(function(msg){
 		});
-	
+	console.log("IdSecao: "+localStorage.getItem("idSecao"));
 	$("button").click(function(){
 		var parametros = {
 			idSecao: 1,
 			numero: $("#num").val(),
 			idCargo: pegarIdCargo($("#cargo").text()),
 		}
-		console.log(localStorage.getItem("idSecao"));
-		console.log()
+		
 		//$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
 		if(preencheu == true){
 			$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
