@@ -383,7 +383,7 @@ function telaTerminalCancelouVotacao(){
 }
 
 function telaErro(){
-	document.getElementById('teste').innerHTML = "Ip da urna não está vingulado a seção";
+	document.getElementById('teste').innerHTML = "Ip da urna não está vinculado a seção";
 }
 
 function telaIpExist(){
