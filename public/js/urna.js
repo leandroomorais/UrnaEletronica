@@ -565,7 +565,7 @@ $(document).ready(function(){
 		if(enviouSecao == false){
 			try {
 				console.log(secao.status);
-				if(secao.status == "Ip da urna não está vingulado a seção"){
+				if(secao.status == "Ip da urna não está vinculado a seção"){
 					clearTelas();
 					telaErro();
 				}else{
