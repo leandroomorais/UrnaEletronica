@@ -118,7 +118,7 @@ public class UrnaClient extends Controller{
 			ipUrna = InetAddress.getLocalHost().getHostAddress();
 			IpUrna ipUrna2 = new IpUrna();
 			ipUrna2.ipUrna = ipUrna;
-			//ipUrna2.save();*/
+			ipUrna2.save();
 			String json = g.toJson(ipUrna2);
 			renderJSON(json);
 		} catch (Exception e) {
