@@ -17,6 +17,7 @@ import play.libs.WS.HttpResponse;
 import play.mvc.Controller;
 
 public class UrnaClient extends Controller{
+	private static String ipUrna = "";
 	private static final Gson g = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 	private static Random random = new Random();
 	
@@ -66,7 +67,7 @@ public class UrnaClient extends Controller{
 	public static void enviarVoto(int numCandidato, int idCargo, String nome,  String voto) {
 		try {
 			UrnaClient.response.accessControl("*");
-			String ipUrna = InetAddress.getLocalHost().getHostAddress();
+			//ipUrna = InetAddress.getLocalHost().getHostAddress();
 			Map paramentros = new HashMap<>();
 			paramentros.put("numCandidato", numCandidato);
 			paramentros.put("nome", nome);
@@ -114,10 +115,10 @@ public class UrnaClient extends Controller{
 	public static void ipUrna() {
 		try {
 			UrnaClient.response.accessControl("*");
-			String ipUrna = InetAddress.getLocalHost().getHostAddress();
+			ipUrna = InetAddress.getLocalHost().getHostAddress();
 			IpUrna ipUrna2 = new IpUrna();
 			ipUrna2.ipUrna = ipUrna;
-			ipUrna2.save();
+			//ipUrna2.save();*/
 			String json = g.toJson(ipUrna2);
 			renderJSON(json);
 		} catch (Exception e) {
@@ -126,25 +127,20 @@ public class UrnaClient extends Controller{
 	}
 	
 	public static void setUrna(long idSecao){
-		try {
-			UrnaClient.response.accessControl("*");
-			String ipUrna = InetAddress.getLocalHost().getHostAddress();
+		UrnaClient.response.accessControl("*");
+		//String ipUrna = InetAddress.getLocalHost().getHostAddress();
+		
+		Map param = new HashMap<>();
+		param.put("idSecao", idSecao);
+		param.put("ipUrna", ipUrna);
+		
+		HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")
+				.setParameters(param).post();
+		
+		if(response.success()){
 			
-			Map param = new HashMap<>();
-			param.put("idSecao", idSecao);
-			param.put("ipUrna", ipUrna);
-			
-			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")
-					.setParameters(param).post();
-			
-			if(response.success()){
-				
-			}else{
-				flash.error("Erro para setUrna");
-			}
-			
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+		}else{
+			flash.error("Erro para setUrna");
 		}
 		
 	}
