@@ -408,24 +408,24 @@ function telaBranco(cargo){
 $(document).ready(function(){
 	
 	var servico = "";
-	var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
-	//var servicoTerminal = "http://localhost:9000/pegarStatusUrna";
+	//var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
+	var servicoTerminal = "http://localhost:9000/pegarStatusUrna";
 	//var servicoTSE = "https://urna-eletronica.herokuapp.com/listarCargos";
 	//var servicoTSE = "http://localhost:9000/listarCargos";
-	var servicoUrnaFinalizada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaFinalizada";
-	var servicoUrnaCancelada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaCancelada";
-	//var servicoUrnaFinalizada = "http://localhost:9000/pegarStatusUrnaFinalizada";
-	//var servicoUrnaCancelada = "http://localhost:9000/pegarStatusUrnaCancelada";
+	//var servicoUrnaFinalizada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaFinalizada";
+	//var servicoUrnaCancelada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaCancelada";
+	var servicoUrnaFinalizada = "http://localhost:9000/pegarStatusUrnaFinalizada";
+	var servicoUrnaCancelada = "http://localhost:9000/pegarStatusUrnaCancelada";
 	//var servicoUrnaIp = "https://urna-eletronica.herokuapp.com/ipUrna";
 	
 	/*$.getJSON("https://urna-eletronica.herokuapp.com/ipUrna").done(ipUrna);
 	$.getJSON("https://urna-eletronica.herokuapp.com/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
 	$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){*/
-		$.getJSON("https://urna-eletronica.herokuapp.com/ipUrna").done(ipUrna);
+		$.getJSON("http://localhost:9000/ipUrna").done(ipUrna);
 		setInterval(function () {
-			$.getJSON("https://urna-eletronica.herokuapp.com/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
+			$.getJSON("http://localhost:9000/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
 		}, 1000);
-		$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
+		$.getJSON("http://localhost:9000/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
 		try {
 			arrayCargosPossiveis.push("Deputado Federal");
 			arrayCargosPossiveis.push("Deputador Estadual");
@@ -548,8 +548,8 @@ $(document).ready(function(){
 	}
 	
 	$.ajax({
-        url: "https://urna-eletronica.herokuapp.com/enviarIpUrna",
-        //url: "http://localhost:9000/enviarIpUrna",
+       // url: "https://urna-eletronica.herokuapp.com/enviarIpUrna",
+        url: "http://localhost:9000/enviarIpUrna",
         type: 'post',
         data: {
         	ipUrna: localStorage.getItem("ipUrna"),
@@ -610,8 +610,8 @@ $(document).ready(function(){
         					controlador = 0;
         					for(var i = 0;i<arrayCargos.length - controlador;i++){
 	        					$.ajax({
-	        				          url: "https://urna-eletronica.herokuapp.com/voto",
-	        				          //url: "http://localhost:9000/voto",
+	        				          //url: "https://urna-eletronica.herokuapp.com/voto",
+	        				          url: "http://localhost:9000/voto",
 	        				          type: 'post',
 	        				          data: {
 	        				        	   numCandidato: 0,
@@ -651,8 +651,8 @@ $(document).ready(function(){
 			        	segundos++;
 			        	if(segundos == 30){
 			        		$.ajax({
-								url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
-						        //url: "http://localhost:9000/enviarPedidoTempo",
+								//url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
+						       url: "http://localhost:9000/enviarPedidoTempo",
 						          type : 'post',
 								})
 								.done(function(msg){
@@ -681,8 +681,8 @@ $(document).ready(function(){
     }, 1000);
 	
 	$.ajax({
-        url: "https://urna-eletronica.herokuapp.com/setUrna",
-        //url: "http://localhost:9000/setUrna",
+        //url: "https://urna-eletronica.herokuapp.com/setUrna",
+        url: "http://localhost:9000/setUrna",
         type: 'post',
         data: {
         	idSecao: localStorage.getItem("idSecao"),
@@ -700,7 +700,7 @@ $(document).ready(function(){
 		
 		//$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
 		if(preencheu == true){
-			$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
+			$.getJSON("http://localhost:9000/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
 	    	.done(function (dados){
 	    		try{
 	    			if(preencheu == true){
@@ -740,8 +740,8 @@ $(document).ready(function(){
 			}else if(votoNull == true){
 				clearTelas();
 				$.ajax({
-			          url: "https://urna-eletronica.herokuapp.com/voto",
-			          //url: "http://localhost:9000/voto",
+			          //url: "https://urna-eletronica.herokuapp.com/voto",
+			          url: "http://localhost:9000/voto",
 			          type: 'post',
 			          data: {
 			        	   numCandidato: 0,
@@ -753,8 +753,8 @@ $(document).ready(function(){
 					.done(function(msg){
 					});
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        url: "http://localhost:9000/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
 			               status: "finalizado"
@@ -776,8 +776,8 @@ $(document).ready(function(){
 				botaoConfirmar = true;
 			}else if(votouBranco == true){
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/voto",
-			        //url: "http://localhost:9000/voto",
+					//url: "https://urna-eletronica.herokuapp.com/voto",
+			        url: "http://localhost:9000/voto",
 			          type: 'post',
 			          data: {
 			        	  numCandidato: 0,
@@ -789,8 +789,8 @@ $(document).ready(function(){
 					.done(function(msg){
 					});
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        url: "http://localhost:9000/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
 			               status: "finalizado"
@@ -816,8 +816,8 @@ $(document).ready(function(){
 	        	.done(verificarUrna);
 	        	votoValido = false;
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/voto",
-			        //url: "http://localhost:9000/voto",
+					//url: "https://urna-eletronica.herokuapp.com/voto",
+			        url: "http://localhost:9000/voto",
 			          type : 'post',
 			          data : {
 			               idCargo: Cargo,
@@ -830,8 +830,8 @@ $(document).ready(function(){
 					.done(function(msg){
 					});
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        url: "http://localhost:9000/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
 			               status: "finalizado"
