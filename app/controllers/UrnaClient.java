@@ -17,7 +17,6 @@ import play.libs.WS.HttpResponse;
 import play.mvc.Controller;
 
 public class UrnaClient extends Controller{
-	private static String ipUrna = "";
 	private static final Gson g = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 	private static Random random = new Random();
 	
@@ -67,7 +66,7 @@ public class UrnaClient extends Controller{
 	public static void enviarVoto(int numCandidato, int idCargo, String nome,  String voto) {
 		try {
 			UrnaClient.response.accessControl("*");
-			//ipUrna = InetAddress.getLocalHost().getHostAddress();
+			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			Map paramentros = new HashMap<>();
 			paramentros.put("numCandidato", numCandidato);
 			paramentros.put("nome", nome);
@@ -115,7 +114,7 @@ public class UrnaClient extends Controller{
 	public static void ipUrna() {
 		try {
 			UrnaClient.response.accessControl("*");
-			ipUrna = InetAddress.getLocalHost().getHostAddress();
+			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			IpUrna ipUrna2 = new IpUrna();
 			ipUrna2.ipUrna = ipUrna;
 			ipUrna2.save();
@@ -127,20 +126,26 @@ public class UrnaClient extends Controller{
 	}
 	
 	public static void setUrna(long idSecao){
-		UrnaClient.response.accessControl("*");
-		//String ipUrna = InetAddress.getLocalHost().getHostAddress();
-		
-		Map param = new HashMap<>();
-		param.put("idSecao", idSecao);
-		param.put("ipUrna", ipUrna);
-		
-		HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna")
-				.setParameters(param).post();
-		
-		if(response.success()){
+		try {
+			UrnaClient.response.accessControl("*");
+			String ipUrna = InetAddress.getLocalHost().getHostAddress();
 			
-		}else{
-			flash.error("Erro para setUrna");
+			Map param = new HashMap<>();
+			param.put("idSecao", idSecao);
+			param.put("ipUrna", ipUrna);
+			
+			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna").setParameters(param).post();
+			//HttpResponse response = WS.url("http://localhost:80/api/setUrna")
+			
+			if(response.success()){
+				System.out.println("Deu certo para setUrna");
+			}else{
+				System.out.println("Erro para setUrna");
+				//flash.error("Erro para setUrna");
+			}
+			
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
 		
 	}
