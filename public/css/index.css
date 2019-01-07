@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 
 
-@media(min-width: 400px){
+@media(min-width: 501px){
 	.tela, #tela{
 		float: left;
 		margin-left: 26.3%;

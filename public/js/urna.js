@@ -13,6 +13,7 @@ var cargoSenador = false;
 var preencheu = false;
 var preencheuBool = false;
 var controlador = 0;
+var controladorAUX = 0;
 var senador = 1;
 var votoValido = false;
 var votoNull = false;
@@ -20,7 +21,7 @@ var votouBranco = false;
 var encerrarVotacao = false;
 var partido = "";
 var numero = "";
-var	Cargo = ""; 
+var	Cargo = "";
 var nome = "";
 var enviouSecao = false;
 var iniciarVotacao = false;
@@ -42,11 +43,12 @@ var enviarVotosCancelados = true;
 var arrayCargosPossiveis = [];
 var controleCargos = 0;
 var teste = "";
-var numeroSenadorAtual = 0;
 var telaExist = false;
 var telaIpSecao = false;
 var secaoEnviada = false;
 var enviarSecaoTSE = false;
+var numeroSenadorAtual = -1;
+var eleicao5Cargos = false;
 
 function ComponentsTelaBranco(cargo){
 	try{
@@ -56,23 +58,23 @@ function ComponentsTelaBranco(cargo){
 		var trLinha2 = document.createElement('tr');
 		var trLinha3 = document.createElement('tr');
 		var trLinha4 = document.createElement('tr');
-		
+
 		var tdColunaSeuVoto = document.createElement('td');
 		var tdColunaCargo = document.createElement('td');
 		var tdColunaInstrucao = document.createElement('td');
 		var tdColunaConfirma = document.createElement('td');
 		var tdColunaCorrige = document.createElement('td');
 		var tdColunaVotoBranco = document.createElement('td');
-		
+
 		var pSeuVoto = document.createElement('p');
 		var pCargo = document.createElement('p');
 		var pVotoBranco = document.createElement('p');
 		var pTecla = document.createElement('p');
 		var pConfirma = document.createElement('p');
 		var pCorrige = document.createElement('p');
-		
+
 		pSeuVoto.textContent = "Seu voto para";
-		pCargo.textContent = cargo; 
+		pCargo.textContent = cargo;
 		pVotoBranco.textContent = "Voto em Branco";
 		pTecla.textContent = "Aperte a Tecla";
 		pConfirma.textContent = "VERDE: para CONFIRMAR";
@@ -80,22 +82,22 @@ function ComponentsTelaBranco(cargo){
 
 		tdColunaSeuVoto.appendChild(pSeuVoto);
 		trLinha1.appendChild(tdColunaSeuVoto);
-		
+
 		tdColunaCargo.appendChild(pCargo);
 		trLinha1.appendChild(tdColunaCargo);
-		
+
 		tdColunaVotoBranco.appendChild(pVotoBranco);
 		trLinha1.appendChild(tdColunaVotoBranco);
-		
+
 		tdColunaInstrucao.appendChild(pTecla);
 		trLinha2.appendChild(tdColunaInstrucao);
-		
+
 		tdColunaConfirma.appendChild(pConfirma);
 		trLinha2.appendChild(tdColunaConfirma);
-		
+
 		tdColunaCorrige.appendChild(pCorrige);
 		trLinha2.appendChild(tdColunaCorrige);
-		 
+
 		tbody.appendChild(trLinha1);
 		tbody.appendChild(trLinha2);
 	}catch(erro){
@@ -110,9 +112,9 @@ function ComponentsTelaFim(){
 		var tr = document.createElement('tr');
 		var td = document.createElement('td');
 		td.textContent = "FIM";
-		 
+
 		td.setAttribute('id', 'cargo');
-		 
+
 		tr.appendChild(td);
 		tbody.appendChild(tr);
 	}catch(erro){
@@ -137,7 +139,7 @@ function candidatoNaoEncontrado(cargo){
 	var pCargo = document.createElement('p');
 	var pNumeroErrado = document.createElement('p');
 	var pVotoNulo = document.createElement('p');
-	
+
 	pSeuVoto.textContent = "Seu voto para";
 	pCargo.textContent = cargo;
 	pNumeroErrado.textContent = "Número errado";
@@ -170,7 +172,7 @@ function passarValores(dados){
 		var trLinha4 = document.createElement('tr');
 		var trLinha5 = document.createElement('tr');
 		var trLinha6 = document.createElement('tr');
-		
+
 		var tdColunaForm = document.createElement('td');
 		var tdColunaSeuVoto = document.createElement('td');
 		var tdColunaCargo = document.createElement('td');
@@ -188,7 +190,7 @@ function passarValores(dados){
 		var tdColunaViceNome = document.createElement('td');
 		var tdColunaImgVice = document.createElement('td');
 		var tdColunaNumero = document.createElement('td');
-		
+
 		var pSeuVoto = document.createElement('p');
 		var pCargo = document.createElement('p');
 		var pNome = document.createElement('p');
@@ -198,21 +200,34 @@ function passarValores(dados){
 		var pCorrige = document.createElement('p');
 		var pViceNome = document.createElement('p');
 		var pNumero = document.createElement('p');
-		
+
 		var img = document.createElement('img');
 		var imgSuple1 = document.createElement('img');
 		var imgSuple2 = document.createElement('img');
 		var imgVice = document.createElement('img');
-		
+
 		tdColunaReferencsNome.textContent = "Nome ";
 		tdColunaReferencsPartido.textContent = "Partido ";
 		var id = dados.idCargo;
+		var idCandidato = dados.id;
 		var cargoTxt = "";
+		var imgURl = "";
 		var cargo = function(id){
 			for(var i = 0;i<arrayCargos.length;i++){
 				if(arrayCargos[i].id == id){
-					cargoTxt += arrayCargos[i].nome;
+					cargoTxt = arrayCargos[i].nome;
 					return cargoTxt;
+				}
+			}
+		}
+		
+		var fotos = function(idCandidato){
+			var arrayNumeros = localStorage.getItem("arrayNumeros");
+			arrayNumeros = JSON.parse(arrayNumeros);
+			for(var i = 0;i<arrayNumeros.length;i++){
+				if(arrayNumeros[i].id == idCandidato){
+					imgURl = arrayNumeros[i].url;
+					return imgURl;
 				}
 			}
 		}
@@ -220,14 +235,14 @@ function passarValores(dados){
 		pCargo.innerHTML = cargo(id);
 		pNome.textContent = dados.nome;
 		pNome.setAttribute('class', 'font-text');
-		pPartido.textContent = "";
+		//pPartido.textContent = "";
 		pTecla.textContent = "Aperte a Tecla";
 		pConfirma.textContent = "VERDE: para CONFIRMAR";
 		pCorrige.textContent = "LARANJA: para CORRIGIR";
 		pNumero.textContent = "Número ";
-		/*img.src = dados.url;
-		img.setAttribute('width', '90px');
-		img.setAttribute('height', '90px');*/
+		img.src = fotos(idCandidato);
+		img.setAttribute('width', '75px');
+		img.setAttribute('height', '100px');
 		/*if(dados.cargo.cargo == "Senador 1" || dados.cargo.cargo == "Senador 2"){
 			if(dados.urlSuple1.length > 0 && dados.urlSuple2.length > 0){
 				imgSuple1.src = dados.urlSuple1;
@@ -236,77 +251,75 @@ function passarValores(dados){
 				imgSuple2.src = dados.urlSuple2;
 				imgSuple2.setAttribute('width', '100px');
 				imgSuple2.setAttribute('height', '100px');
-				
+
 				tdColunaSuple1.appendChild(imgSuple1);
 				tdColunaSuple2.appendChild(imgSuple2);
 			}
-		}else if(dados.cargo.cargo == "Presidente" || dados.cargo.cargo == "Governador"){
+		}else*/ 
+		if(cargo(id) == "Presidente" || cargo(id) == "Governador" || cargo(id) == "Senador"){
 			pViceNome.textContent = dados.vice;
-			
-			imgVice.src = dados.url;
+			/*imgVice.src = dados.url;
 			imgVice.setAttribute('width', '90px');
-			imgVice.setAttribute('height', '90px');
-			
+			imgVice.setAttribute('height', '90px');*/
+
 			tdColunaReferencsVice.textContent = "Vice candidato";
+			tdColunaReferencsVice.setAttribute('class', 'font-text');
 			tdColunaViceNome.appendChild(pViceNome);
-			tdColunaImgVice.appendChild(imgVice);
-		}*/
-		
+			//tdColunaImgVice.appendChild(imgVice);
+		}
 		tdColunaReferencsNome.setAttribute('class', 'font-text');
 		tdColunaReferencsPartido.setAttribute('class', 'font-text');
 		trLinha1.appendChild(tdColunaSeuVoto);
 		trLinha3.appendChild(tdColunaReferencsNome);
-		trLinha4.appendChild(tdColunaReferencsPartido);
+		//trLinha4.appendChild(tdColunaReferencsPartido);
 		tdColunaForm.setAttribute("colspan", 5);
-		
+
 		tdColunaForm.appendChild(form);
 		tdColunaSeuVoto.appendChild(pSeuVoto);
 		tdColunaNumero.appendChild(pNumero);
 		tdColunaCargo.appendChild(pCargo);
 		tdColunaNome.appendChild(pNome);
-		tdColunaPartido.appendChild(pPartido);
-		//tdColunaFoto.appendChild(img);
+		//tdColunaPartido.appendChild(pPartido);
+		tdColunaFoto.appendChild(img);
 		tdColunaInstrucao.appendChild(pTecla);
 		tdColunaConfirma.appendChild(pConfirma);
 		tdColunaCorrige.appendChild(pCorrige);
-		
+
 		trLinha1.appendChild(tdColunaSeuVoto);
 		trLinha1.appendChild(tdColunaCargo);
-		
-		
+
+
 		trLinha3.appendChild(tdColunaNome);
 		trLinha2.appendChild(tdColunaNumero);
 		trLinha2.appendChild(tdColunaForm);
-		trLinha4.appendChild(tdColunaPartido);
-		//trLinha1.appendChild(tdColunaFoto);
-		
-		trLinha3.appendChild(tdColunaSuple1);
-		trLinha3.appendChild(tdColunaSuple2);
-		trLinha3.appendChild(tdColunaImgVice);
-		
-		trLinha4.appendChild(tdColunaReferencsVice);
-		trLinha4.appendChild(tdColunaViceNome);
-		
+		//trLinha4.appendChild(tdColunaPartido);
+		trLinha1.appendChild(tdColunaFoto);
+
+		//trLinha3.appendChild(tdColunaSuple1);
+		//trLinha3.appendChild(tdColunaSuple2);
+		//trLinha3.appendChild(tdColunaImgVice);
+
+		trLinha3.appendChild(tdColunaReferencsVice);
+		trLinha3.appendChild(tdColunaViceNome);
+
 		trLinha5.appendChild(tdColunaInstrucao);
 		trLinha5.appendChild(tdColunaConfirma);
 		trLinha5.appendChild(tdColunaCorrige);
-		
-		
-		
+
+
+
 		tbody.appendChild(trLinha1);
 		tbody.appendChild(trLinha2);
 		tbody.appendChild(trLinha3);
-		tbody.appendChild(trLinha4);
 		tbody.appendChild(trLinha5);
 	} catch (e) {
 		alert("Erro: "+e);
 	}
-	
+
 }
 
 function criarComponentsTelaDinamica(cargo, numero){
 	try {
-		console.log("Entrou no Verificar Urna: "+cargo+" "+numero);
 	document.getElementById('teste').innerHTML = "";
 	if(numero == 0){
 		var tbody = document.getElementById('body-tela');
@@ -322,7 +335,7 @@ function criarComponentsTelaDinamica(cargo, numero){
 	}else{
 		if(numero !== undefined){
 			var n = numero.toString();
-		
+
 		var tbody = document.getElementById('body-tela');
 		var trLinha1 = document.createElement('tr');
 		var trLinha2 = document.createElement('tr');
@@ -360,7 +373,7 @@ function criarComponentsTelaDinamica(cargo, numero){
 		input2.setAttribute('class', "campo-text");
 		input2.setAttribute('id', 'num');
 		form.appendChild(input2);
-		
+
 		trLinha1.appendChild(td);
 		td2.appendChild(form);
 		trLinha2.appendChild(td2);
@@ -368,11 +381,11 @@ function criarComponentsTelaDinamica(cargo, numero){
 		tbody.appendChild(trLinha2);
 		}
 	}
-		
+
 	} catch (e) {
 		alert("Erro: t "+e);
 	}
-	
+
 }
 
 function clearTelas(){
@@ -415,28 +428,29 @@ function telaBranco(cargo){
 }
 
 $(document).ready(function(){
-	
+
 	var servico = "";
 	//var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
-	var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
-	
+	var servicoTerminal = "http://localhost:9000/pegarStatusUrna";
+
 	//var servicoTSE = "https://urna-eletronica.herokuapp.com/listarCargos";
 	//var servicoTSE = "http://localhost:9000/listarCargos";
 	//var servicoUrnaFinalizada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaFinalizada";
 	//var servicoUrnaCancelada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaCancelada";
-	var servicoUrnaFinalizada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaFinalizada";
-	var servicoUrnaCancelada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaCancelada";
+	var servicoUrnaFinalizada = "http://localhost:9000/pegarStatusUrnaFinalizada";
+	var servicoUrnaCancelada = "http://localhost:9000/pegarStatusUrnaCancelada";
 	//var servicoUrnaIp = "https://urna-eletronica.herokuapp.com/ipUrna";
-	
+
 	/*$.getJSON("https://urna-eletronica.herokuapp.com/ipUrna").done(ipUrna);
 	$.getJSON("https://urna-eletronica.herokuapp.com/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
 	$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){*/
-		$.getJSON("https://urna-eletronica.herokuapp.com/ipUrna").done(ipUrna);
+		$.getJSON("http://localhost:9000/ipUrna").done(ipUrna);
 			setInterval(function () {
-				$.getJSON("https://urna-eletronica.herokuapp.com/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
+				$.getJSON("http://localhost:9000/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
 			}, 1000);
-		$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
+		$.getJSON("http://localhost:9000/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
 		try {
+			var teste = 0;
 			arrayCargosPossiveis.push("Deputado Federal");
 			arrayCargosPossiveis.push("Deputado Estadual");
 			arrayCargosPossiveis.push("Senador");
@@ -444,41 +458,84 @@ $(document).ready(function(){
 			arrayCargosPossiveis.push("Presidente");
 			arrayCargosPossiveis.push("Prefeito");
 			arrayCargosPossiveis.push("Vereador");
-			var teste = 0;
-			while(arrayCargos.length < cargos.length){
-				if(cargos[teste].nome == arrayCargosPossiveis[controleCargos]){
-					var objetoCargo = {
-							id: cargos[teste].id,
-							nome: cargos[teste].nome,
-							candidatos: cargos[teste].candidatos
-						}
-						$.each(objetoCargo.candidatos, function(i, candidato){
-							var objetoCandidato = {
-								id: candidato.id,
-								numero: candidato.numero,
-								idCargo: candidato.idCargo,
-								nomeCandidato: candidato.nome,
-							}
-							arrayNumeros.push(objetoCandidato);
-							localStorage.setItem("arrayNumeros", JSON.stringify(arrayNumeros));
-						});
-						
-						arrayCargos.push(objetoCargo);
-						localStorage.setItem("arrayCargos", JSON.stringify(arrayCargos));
-						controleCargos++;
-						teste = 0;
-				}else{
-					teste++;
+
+			for (var i = 0; i < cargos.length; i++) {
+				if(cargos[i].nome == "Presidente" || cargos[i].nome == "Governador"){
+					eleicao5Cargos = true;
 				}
 			}
-			
+
+			while(arrayCargos.length < cargos.length){
+					if(cargos[teste].nome == arrayCargosPossiveis[controleCargos]){
+						if(eleicao5Cargos == true){
+							if(cargos[teste].nome == "Prefeito" || cargos[teste].nome == "Vereador"){
+								break;
+								continue;
+							}else{
+								var objetoCargo = {
+										id: cargos[teste].id,
+										nome: cargos[teste].nome,
+										candidatos: cargos[teste].candidatos
+									}
+									$.each(objetoCargo.candidatos, function(i, candidato){
+										var objetoCandidato = {
+											id: candidato.id,
+											numero: candidato.numero,
+											url: "http://tse.vps.leandrorego.com/api/fotoCandidato?id="+candidato.id,
+											vice: candidato.vice,
+											idCargo: candidato.idCargo,
+											nomeCandidato: candidato.nome,
+										}
+										arrayNumeros.push(objetoCandidato);
+										localStorage.setItem("arrayNumeros", JSON.stringify(arrayNumeros));
+									});
+
+									arrayCargos.push(objetoCargo);
+									localStorage.setItem("arrayCargos", JSON.stringify(arrayCargos));
+									controleCargos++;
+									teste = 0;
+							}
+						}else{
+							if(cargos[teste].nome == "Presidente" || cargos[teste].nome == "Governador" || cargos[teste].nome == "Senador"
+							|| cargos[teste].nome == "Deputado Federal" || cargos[teste].nome == "Deputado Estadual"){
+								break;
+								continue;
+							}else{
+								var objetoCargo = {
+										id: cargos[teste].id,
+										nome: cargos[teste].nome,
+										candidatos: cargos[teste].candidatos
+									}
+									$.each(objetoCargo.candidatos, function(i, candidato){
+										var objetoCandidato = {
+											id: candidato.id,
+											numero: candidato.numero,
+											vice: candidato.vice,
+											url: "http://tse.vps.leandrorego.com/api/fotoCandidato?id="+candidato.id,
+											idCargo: candidato.idCargo,
+											nomeCandidato: candidato.nome,
+										}
+										arrayNumeros.push(objetoCandidato);
+										localStorage.setItem("arrayNumeros", JSON.stringify(arrayNumeros));
+									});
+
+									arrayCargos.push(objetoCargo);
+									localStorage.setItem("arrayCargos", JSON.stringify(arrayCargos));
+									controleCargos++;
+									teste = 0;
+							}
+						}
+					}else{
+						teste++;
+					}
+				}
 		} catch (e) {
 			alert("Erro: "+e);
 		}
-		
-		
+
+
 	});
- 
+
 	function pegarIdCargo(nome){
 		var arrayCargos = localStorage.getItem("arrayCargos");
 		arrayCargos = JSON.parse(arrayCargos);
@@ -488,7 +545,7 @@ $(document).ready(function(){
 			}
 		}
 	}
-	
+
 	function pegarNomeCargo(id){
 		var arrayCargos = localStorage.getItem("arrayCargos");
 		arrayCargos = JSON.parse(arrayCargos);
@@ -498,7 +555,7 @@ $(document).ready(function(){
 			}
 		}
 	}
-	
+
 	function verificarCargoNumero(idCargo){
 		var arrayNumeros = localStorage.getItem("arrayNumeros");
 		arrayNumeros = JSON.parse(arrayNumeros);
@@ -509,7 +566,7 @@ $(document).ready(function(){
 		}
 		return 0;
 	}
-	
+
 	function verificarUrna(data){
 		try {
 			var arrayCargos = localStorage.getItem("arrayCargos");
@@ -523,7 +580,7 @@ $(document).ready(function(){
 					}
 					preencheu = false;
 				}
-				else if(arrayCargos.length == controlador){
+				if(arrayCargos.length == controlador){
 					if(botaoCorrige==false){
 						document.getElementById('demo2').play();
 					}
@@ -533,41 +590,50 @@ $(document).ready(function(){
 					preencheu = false;
 				}else{
 					if(arrayCargos[controlador].nome == "Senador"){
-						cargoSenador = true;
 						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
-						numeroSenadorAtual = verificarCargoNumero(arrayCargos[controlador].id);
-						if(incremento < 3){
-							incremento++;
+						if(botaoCorrige == false){
+							cargoSenador = true;
 						}
-					}else if(cargoSenador == true && controlador == controlador+1){
+						$("form").keypress(function(){
+							alert("Utilize somente os botões da urna!");
+							$("input").attr("disabled",true);
+							$("#num").attr("disabled",false);
+						});
+					}else if(cargoSenador == true){
 						controlador--;
+						incremento++;
 						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
-						incremento = 1;
 						cargoSenador = false;
+						$("form").keypress(function(){
+							alert("Utilize somente os botões da urna!");
+							$("input").attr("disabled",true);
+							$("#num").attr("disabled",false);
+						});
 					}else{
-						
 						criarComponentsTelaDinamica(arrayCargos[controlador].nome, verificarCargoNumero(arrayCargos[controlador].id));
 						$("form").keypress(function(){
 							alert("Utilize somente os botões da urna!");
 							$("input").attr("disabled",true);
+							$("#num").attr("disabled",false);
 						});
+						incremento = 1;
 					}
-				}				
+				}
 			}
 		} catch (e) {
 			alert("ERRO: "+e);
 		}
-		
+
 	}
-	
+
 	function ipUrna(ip){
 		ipUrna = ip.ipUrna;
 		localStorage.setItem("ipUrna", ipUrna);
 	}
-	
+
 	$.ajax({
-        url: "https://urna-eletronica.herokuapp.com/enviarIpUrna",
-        //url: "http://localhost:9000/enviarIpUrna",
+        //url: "https://urna-eletronica.herokuapp.com/enviarIpUrna",
+        url: "http://localhost:9000/enviarIpUrna",
         type: 'post',
         data: {
         	ipUrna: localStorage.getItem("ipUrna"),
@@ -575,10 +641,9 @@ $(document).ready(function(){
         error: function(data){
         	clearTelas();
         	telaIpExist();
-        	telaExist = true;
         },
 		});
-	
+
 	function pegarSecao(secao){
 		if(enviouSecao == false){
 			try {
@@ -604,11 +669,9 @@ $(document).ready(function(){
 			}
 		}
 	}
-	
+
 	var interval = setInterval(function () {
-        if(iniciarUrna == true && telaExist == false
-        		){
-        	console.log(servicoTerminal);
+        if(iniciarUrna == true){
         	$.getJSON(servicoUrnaFinalizada).done(function (dados){
         		if(dados.status == 1){
         			if(terminalFinalizouVotacao == true){
@@ -628,41 +691,24 @@ $(document).ready(function(){
         				terminalCancelouVotacao = false;
         				if(enviarVotosCancelados == true){
         					enviarVotosCancelados = false;
-        					controlador = 0;
-        					if(cargoSenador == true){
-        						for(var i = 0;i<(arrayCargos.length+1) - controlador;i++){
-    	        					$.ajax({
-    	        				          url: "https://urna-eletronica.herokuapp.com/voto",
-    	        				          //url: "http://localhost:9000/voto",
-    	        				          type: 'post',
-    	        				          data: {
-    	        				        	   numCandidato: 0,
-    	        				        	   idCargo: 0,
-    	        				               voto: "Nulo"
-    	        				          },
-    	        				          
-    	        						})
-    	        						.done(function(msg){
-    	        						});
-    	        				}
-        					}else{
-        						for(var i = 0;i<arrayCargos.length - controlador;i++){
-    	        					$.ajax({
-    	        				          url: "https://urna-eletronica.herokuapp.com/voto",
-    	        				          //url: "http://localhost:9000/voto",
-    	        				          type: 'post',
-    	        				          data: {
-    	        				        	   numCandidato: 0,
-    	        				        	   idCargo: 0,
-    	        				               voto: "Nulo"
-    	        				          },
-    	        				          
-    	        						})
-    	        						.done(function(msg){
-    	        						});
-    	        				}
-        					}
-        					
+    						for(var i = localStorage.getItem("controlador")-1;i < arrayCargos.length;i++){
+	        					$.ajax({
+	        				          //url: "https://urna-eletronica.herokuapp.com/voto",
+	        				          url: "http://localhost:9000/voto",
+	        				          type: 'post',
+	        				          data: {
+	        				        	   numCandidato: 0,
+	        				        	   idCargo: 0,
+	        				               voto: "",
+	        				               tipo: "votosCancelados"
+	        				          },
+
+	        						})
+	        						.done(function(msg){
+	        						});
+	        				}
+        				 
+    						localStorage.setItem("controlador", 0);
         				}
         			}
         		}
@@ -684,17 +730,16 @@ $(document).ready(function(){
 				else if(dados.status == "liberada"){
 					if(terminalLiberouUrna == true){
 						$.getJSON(servicoTerminal).done(verificarUrna);
-						console.log("Entrou 1");
 						terminalLiberouUrna = false;
 					}
 					terminalTravouUrna = false;
 					if(botaoConfirmar == false){
-						console.log("Segundos: "+segundos);
+						//console.log("Segundos: "+segundos);
 			        	segundos++;
 			        	if(segundos == 30){
 			        		$.ajax({
-								url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
-						        //url: "http://localhost:9000/enviarPedidoTempo",
+								//url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
+						        url: "http://localhost:9000/enviarPedidoTempo",
 						          type : 'post',
 								})
 								.done(function(msg){
@@ -717,59 +762,93 @@ $(document).ready(function(){
 					terminalFinalizouVotacao = true;
 				}
 			});
-        	
+
         }
-        
+
     }, 1000);
-	
+
 	$.ajax({
         //url: "https://urna-eletronica.herokuapp.com/setUrna",
-        url: "https://urna-eletronica.herokuapp.com/setUrna",
+        url: "http://localhost:9000/setUrna",
         type: 'post',
         data: {
         	idSecao: localStorage.getItem("idSecao"),
         },
-        
+
 		}).done(function(msg){
 		});
 	console.log("IdSecao: "+localStorage.getItem("idSecao"));
 	$("button").click(function(){
 		if(preencheu == true){
-			$.getJSON("https://urna-eletronica.herokuapp.com/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
-	    	.done(function (dados){
-	    		try{
-	    			if(preencheu == true){
-	    				if(numeroSenadorAtual == $("#num").val()){
-	    					candidatoNaoEncontrado($("#cargo").text());
-	    					votoNull = true;
-	    					numeroSenadorAtual = 0;
-	    				}
-	    				else if(dados.key=="Error"){
-	    					candidatoNaoEncontrado($("#cargo").text());
-	    					votoNull = true;
-	    				}else {
-	    					passarValores(dados);
-	    					numero = dados.numero;
-	    					Cargo = dados.idCargo;
-	    					nome = dados.nome;
-	    					votoValido = true;
-	    				}
-	    				preencheu = false;
-	    			}
-	    		}catch(erro){
-	    			alert("Erro: "+erro);
-	    		}
-	    	});
+			if($("#cargo").text() == "Senador 1" || $("#cargo").text() == "Senador 2"){
+				var res = $("#cargo").text().substring(0, 7);
+				$.getJSON("http://localhost:9000/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo(res))
+		    	.done(function (dados){
+		    		try{
+		    			if(preencheu == true){
+		    				if(numeroSenadorAtual == $("#num").val()){
+		    					candidatoNaoEncontrado($("#cargo").text());
+		    					votoNull = true;
+		    					numeroSenadorAtual = -1;
+		    				}
+		    				else if(dados.key=="Error"){
+		    					candidatoNaoEncontrado($("#cargo").text());
+		    					votoNull = true;
+		    				}else {
+		    					passarValores(dados);
+		    					numero = dados.numero;
+		    					numeroSenadorAtual = numero;
+		    					Cargo = dados.idCargo;
+		    					nome = dados.nome;
+		    					votoValido = true;
+		    				}
+		    				preencheu = false;
+		    			}
+		    		}catch(erro){
+		    			alert("Erro: "+erro);
+		    		}
+		    	});
+			}else{
+				$.getJSON("http://localhost:9000/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
+		    	.done(function (dados){
+		    		try{
+		    			if(preencheu == true){
+		    				if(numeroSenadorAtual == $("#num").val()){
+		    					candidatoNaoEncontrado($("#cargo").text());
+		    					votoNull = true;
+		    					numeroSenadorAtual = -1;
+		    				}
+		    				else if(dados.key=="Error"){
+		    					candidatoNaoEncontrado($("#cargo").text());
+		    					votoNull = true;
+		    				}else {
+		    					passarValores(dados);
+		    					numero = dados.numero;
+		    					numeroSenadorAtual = numero;
+		    					Cargo = dados.idCargo;
+		    					nome = dados.nome;
+		    					votoValido = true;
+		    				}
+		    				preencheu = false;
+		    			}
+		    		}catch(erro){
+		    			alert("Erro: "+erro);
+		    		}
+		    	});
+			}
+
 		}
-		
+
 		cargo = $("#cargo").text();
+		
     });
-	
+
 	//-------------------
 	// Button Confirmar
 	//-------------------
-	
+
 	$("#confirma").click(function(){
+		localStorage.setItem("controlador", controlador);
 		if(iniciarVotacao == false){
 			alert("Terminal não liberou a urna");
 		}else{
@@ -778,9 +857,9 @@ $(document).ready(function(){
 			}else if(encerrarVotacao == true){
 				alert("Votação Encerrada!");
 			}else if(votoNull == true){
-				console.log("VOTO NULL:");
 	        	votoNull = false;
 				controlador++;
+				controladorAUX++;
 				j = 0;
 				k = 0;
 				evento = 0;
@@ -791,20 +870,21 @@ $(document).ready(function(){
 				botaoConfirmar = true;
 				clearTelas();
 				$.ajax({
-			          url: "https://urna-eletronica.herokuapp.com/voto",
-			          //url: "http://localhost:9000/voto",
+			          //url: "https://urna-eletronica.herokuapp.com/voto",
+			          url: "http://localhost:9000/voto",
 			          type: 'post',
 			          data: {
 			        	   numCandidato: 0,
 			        	   idCargo: 0,
-			               voto: "Nulo"
+			               voto: "Nulo",
+			               tipo: "votoNulos"
 			          },
 					})
 					.done(function(msg){
 					});
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        url: "http://localhost:9000/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
 			               status: "finalizado"
@@ -812,84 +892,36 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				$.getJSON(servicoTerminal)
-	        	.done(function(data){
-	        		try {
-	        			var arrayCargos = localStorage.getItem("arrayCargos");
-	        			arrayCargos = JSON.parse(arrayCargos);
-	        			if(data.status == "liberada"){
-	        				iniciarVotacao = true;
-	        				clearTelas();
-	        				if(controlador > 0 && controlador < arrayCargos.length){
-	        					if(botaoCorrige==false){
-	        						document.getElementById('demo1').play();
-	        					}
-	        					preencheu = false;
-	        				}
-	        				else if(arrayCargos.length == controlador){
-	        					if(botaoCorrige==false){
-	        						document.getElementById('demo2').play();
-	        					}
-	        					telaFim();
-	        					encerrarVotacao = true;
-	        					controlador = 0;
-	        					preencheu = false;
-	        				}else{
-	        					if(arrayCargos[controlador].nome == "Senador"){
-	        						cargoSenador = true;
-	        						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
-	        						numeroSenadorAtual = verificarCargoNumero(arrayCargos[controlador].id);
-	        						if(incremento < 3){
-	        							incremento++;
-	        						}
-	        					}else if(cargoSenador == true && controlador == controlador+1){
-	        						controlador--;
-	        						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
-	        						incremento = 1;
-	        						cargoSenador = false;
-	        					}else{
-	        						
-	        						criarComponentsTelaDinamica(arrayCargos[controlador].nome, verificarCargoNumero(arrayCargos[controlador].id));
-	        						console.log(controlador);
-	        						$("form").keypress(function(){
-	        							alert("Utilize somente os botões da urna!");
-	        							$("input").attr("disabled",true);
-	        						});
-	        					}
-	        				}				
-	        			}
-	        		} catch (e) {
-	        			alert("ERRO: "+e);
-	        		}
-	        	});
-				
+				$.getJSON(servicoTerminal).done(verificarUrna);
+
 			}else if(votouBranco == true){
-				console.log("VOTO BRANCO:");
 	        	votouBranco = false;
 	        	botaoCorrige = false;
 	        	botaoConfirmar = true;
 	        	preencheuBool = false;
 	        	preencheu = false;
 				controlador++;
+				controladorAUX++;
 				j = 0;
 				k = 0;
 				evento = 0;
 				num = "";
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/voto",
-			        //url: "http://localhost:9000/voto",
+					//url: "https://urna-eletronica.herokuapp.com/voto",
+			        url: "http://localhost:9000/voto",
 			          type: 'post',
 			          data: {
 			        	  numCandidato: 0,
 			        	   idCargo: 0,
-			               voto: "Branco"
+			               voto: "Branco",
+			               tipo: "votoBranco"
 			          },
 					})
 					.done(function(msg){
 					});
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        url: "http://localhost:9000/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
 			               status: "finalizado"
@@ -897,75 +929,27 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				$.getJSON(servicoTerminal)
-	        	.done(function(data){
-	        		try {
-	        			var arrayCargos = localStorage.getItem("arrayCargos");
-	        			arrayCargos = JSON.parse(arrayCargos);
-	        			if(data.status == "liberada"){
-	        				iniciarVotacao = true;
-	        				clearTelas();
-	        				if(controlador > 0 && controlador < arrayCargos.length){
-	        					if(botaoCorrige==false){
-	        						document.getElementById('demo1').play();
-	        					}
-	        					preencheu = false;
-	        				}
-	        				else if(arrayCargos.length == controlador){
-	        					if(botaoCorrige==false){
-	        						document.getElementById('demo2').play();
-	        					}
-	        					telaFim();
-	        					encerrarVotacao = true;
-	        					controlador = 0;
-	        					preencheu = false;
-	        				}else{
-	        					if(arrayCargos[controlador].nome == "Senador"){
-	        						cargoSenador = true;
-	        						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
-	        						numeroSenadorAtual = verificarCargoNumero(arrayCargos[controlador].id);
-	        						if(incremento < 3){
-	        							incremento++;
-	        						}
-	        					}else if(cargoSenador == true && controlador == controlador+1){
-	        						controlador--;
-	        						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
-	        						incremento = 1;
-	        						cargoSenador = false;
-	        					}else{
-	        						
-	        						criarComponentsTelaDinamica(arrayCargos[controlador].nome, verificarCargoNumero(arrayCargos[controlador].id));
-	        						console.log(controlador);
-	        						$("form").keypress(function(){
-	        							alert("Utilize somente os botões da urna!");
-	        							$("input").attr("disabled",true);
-	        						});
-	        					}
-	        				}				
-	        			}
-	        		} catch (e) {
-	        			alert("ERRO: "+e);
-	        		}
-	        	});
+				$.getJSON(servicoTerminal).done(verificarUrna);
 			}else if(votoValido == true){
 				clearTelas();
 	        	votoValido = false;
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/voto",
-			        //url: "http://localhost:9000/voto",
+					//url: "https://urna-eletronica.herokuapp.com/voto",
+			        url: "http://localhost:9000/voto",
 			          type : 'post',
 			          data : {
 			               idCargo: Cargo,
 			               numCandidato: numero,
 			               nome: nome,
-					       voto: "Valido"
+					       voto: "Valido",
+					       tipo: "votoValido"
 			          },
 					})
 					.done(function(msg){
 					});
 				$.ajax({
-					url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        //url: "http://localhost:9000/informaVotacaoFinalizada",
+					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+			        url: "http://localhost:9000/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
 			               status: "finalizado"
@@ -973,9 +957,9 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				
-				console.log("VOTO VÁLIDO:");
+
 				controlador++;
+				controladorAUX++;
 				j = 0;
 				k = 0;
 				evento = 0;
@@ -986,9 +970,9 @@ $(document).ready(function(){
 				botaoConfirmar = true;
 				$.getJSON(servicoTerminal)
 	        	.done(verificarUrna);
-				
+
 			}
-		}	
+		}
 	});
 	//----------------------------
 	// Button Corrige
@@ -1042,13 +1026,13 @@ $(document).ready(function(){
 			}
 		}
 	});
-	
-	
-  });	
+
+
+  });
 
 function setarValorComponents(element,id){
 	var array = document.getElementById(element);
-	
+
 	for(var i = 0;i<array.length;i++){
 		if(document.getElementById(array[i].id).value == ""){
 			document.getElementById(array[j].id).value = document.getElementById(id).value;
@@ -1066,10 +1050,10 @@ function setarValorComponents(element,id){
 			document.getElementById(array[j].id).disabled = true;
 			j++;
 			break;
-		}	
+		}
 	}
 	getNumero();
-	
+
 }
 
 function getNumero(){
@@ -1085,7 +1069,7 @@ function getNumero(){
 			bloquearBotoes = true;
 			break;
 		}
-		
+
 	}
 	document.getElementById('num').value = num;
 }
@@ -1095,7 +1079,7 @@ function passarProx(campoatual, proxcampo)
    var tamanho_max = eval("document.f1." + campoatual);
    var tamanho_atual = eval("document.f1."+ campoatual);
    if (tamanho_atual = tamanho_max)
-      { 
+      {
          eval("document.f1."+ proxcampo +".focus();");
       }
 }

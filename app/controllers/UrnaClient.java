@@ -63,7 +63,7 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
-	public static void enviarVoto(int numCandidato, int idCargo, String nome,  String voto) {
+	public static void enviarVoto(int numCandidato, int idCargo, String nome,  String voto, String tipo) {
 		try {
 			UrnaClient.response.accessControl("*");
 			String ipUrna = InetAddress.getLocalHost().getHostAddress();
@@ -73,6 +73,7 @@ public class UrnaClient extends Controller{
 			paramentros.put("idCargo", idCargo);
 			paramentros.put("ipUrna", ipUrna);
 			paramentros.put("voto", voto);
+			paramentros.put("tipo", tipo);
 			HttpResponse response = WS.url("https://urna-api.herokuapp.com/voto").setParameters(paramentros).post();
 			//HttpResponse response = WS.url("http://localhost:9002/voto").setParameters(paramentros).post();
 		} catch (Exception e) {
@@ -135,7 +136,6 @@ public class UrnaClient extends Controller{
 			param.put("ipUrna", ipUrna);
 			
 			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna").setParameters(param).post();
-			//HttpResponse response = WS.url("http://localhost:80/api/setUrna")
 			
 			if(response.success()){
 				System.out.println("Deu certo para setUrna");
