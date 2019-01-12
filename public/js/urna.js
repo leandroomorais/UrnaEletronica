@@ -430,13 +430,7 @@ function telaBranco(cargo){
 $(document).ready(function(){
 	var portClient = "9080";
 	var servico = "";
-	//var servicoTerminal = "https://urna-eletronica.herokuapp.com/pegarStatusUrna";
-	var servicoTerminal = "http://localhost:9080/pegarStatusUrna";
-
-	//var servicoTSE = "https://urna-eletronica.herokuapp.com/listarCargos";
-	//var servicoTSE = "http://localhost:9000/listarCargos";
-	//var servicoUrnaFinalizada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaFinalizada";
-	//var servicoUrnaCancelada = "https://urna-eletronica.herokuapp.com/pegarStatusUrnaCancelada";
+	 
 	var servicoUrnaFinalizada = "http://localhost:"+portClient+"/pegarStatusUrnaFinalizada";
 	var servicoUrnaCancelada = "http://localhost:"+portClient+"/pegarStatusUrnaCancelada";
 	//var servicoUrnaIp = "https://urna-eletronica.herokuapp.com/ipUrna";
@@ -446,9 +440,9 @@ $(document).ready(function(){
 	$.getJSON("https://urna-eletronica.herokuapp.com/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){*/
 		$.getJSON("http://localhost:"+portClient+"/ipUrna").done(ipUrna);
 			setInterval(function () {
-				$.getJSON("http://localhost:"+portClient+"/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
+				$.getJSON("http://localhost:9080/buscaSecao/"+localStorage.getItem("ipUrna")).done(pegarSecao);
 			}, 1000);
-		$.getJSON("http://localhost:"+portClient+"/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
+		$.getJSON("http://localhost:9080/listarCargos/"+localStorage.getItem("idSecao")).done(function(cargos){
 		try {
 			var teste = 0;
 			arrayCargosPossiveis.push("Deputado Federal");
@@ -641,7 +635,9 @@ $(document).ready(function(){
         },
         error: function(data){
         	clearTelas();
+        	botaoConfirmar = true;
         	telaIpExist();
+        	
         },
 		});
 
@@ -673,7 +669,7 @@ $(document).ready(function(){
 
 	var interval = setInterval(function () {
         if(iniciarUrna == true){
-        	$.getJSON(servicoUrnaFinalizada+"/"+localStorage.getItem("ipUrna")).done(function (dados){
+        	$.getJSON("http://localhost:9080/pegarStatusUrnaFinalizada/"+localStorage.getItem("ipUrna")).done(function (dados){
         		if(dados.status == 1){
         			if(terminalFinalizouVotacao == true){
         				clearTelas();
@@ -684,18 +680,19 @@ $(document).ready(function(){
         			}
         		}
         	});
-        	$.getJSON(servicoUrnaCancelada+"/"+localStorage.getItem("ipUrna")).done(function (dados){
+        	$.getJSON("http://localhost:9080/pegarStatusUrnaCancelada/"+localStorage.getItem("ipUrna")).done(function (dados){
         		if(dados.status == 1){
         			if(terminalCancelouVotacao == true){
         				clearTelas();
         				telaTerminalCancelouVotacao();
         				terminalCancelouVotacao = false;
         				if(enviarVotosCancelados == true){
+        					console.log("Entrou no enviar votos nulos");
         					enviarVotosCancelados = false;
     						for(var i = localStorage.getItem("controlador")-1;i < arrayCargos.length;i++){
 	        					$.ajax({
 	        				          //url: "https://urna-eletronica.herokuapp.com/voto",
-	        				          url: "http://localhost:"+portClient+"/voto",
+	        				          url: "http://localhost:9080/voto",
 	        				          type: 'post',
 	        				          data: {
 	        				        	   numCandidato: 0,
@@ -714,7 +711,7 @@ $(document).ready(function(){
         			}
         		}
         	});
-        	$.getJSON(servicoTerminal+"/"+localStorage.getItem("ipUrna")).done(function (dados) {
+        	$.getJSON("http://localhost:9080/pegarStatusUrna/"+localStorage.getItem("ipUrna")).done(function (dados) {
 				if(dados.status == "bloqueada"){
 					 if(terminalTravouUrna == true){
 						 clearTelas();
@@ -730,17 +727,20 @@ $(document).ready(function(){
 				}
 				else if(dados.status == "liberada"){
 					if(terminalLiberouUrna == true){
-						$.getJSON(servicoTerminal).done(verificarUrna);
+						$.getJSON("http://localhost:9080/pegarStatusUrna/"+localStorage.getItem("ipUrna")).done(verificarUrna);
 						terminalLiberouUrna = false;
+						
 					}
 					terminalTravouUrna = false;
 					if(botaoConfirmar == false){
 						//console.log("Segundos: "+segundos);
+						console.log("Entrou no Pedir tempo: "+segundos);
 			        	segundos++;
 			        	if(segundos == 30){
+			        		console.log("ENVIOU O PEDIDO DE TEMPO");
 			        		$.ajax({
 								//url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
-						        url: "http://localhost:"+portClient+"/enviarPedidoTempo",
+						        url: "http://localhost:9080/enviarPedidoTempo",
 						          type : 'post',
 								})
 								.done(function(msg){
@@ -783,7 +783,7 @@ $(document).ready(function(){
 		if(preencheu == true){
 			if($("#cargo").text() == "Senador 1" || $("#cargo").text() == "Senador 2"){
 				var res = $("#cargo").text().substring(0, 7);
-				$.getJSON("http://localhost:"+portClient+"/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo(res))
+				$.getJSON("http://localhost:9080/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo(res))
 		    	.done(function (dados){
 		    		try{
 		    			if(preencheu == true){
@@ -810,7 +810,7 @@ $(document).ready(function(){
 		    		}
 		    	});
 			}else{
-				$.getJSON("http://localhost:"+portClient+"/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
+				$.getJSON("http://localhost:9080/pegarCandidato/"+localStorage.getItem("idSecao")+"/"+$("#num").val()+"/"+pegarIdCargo($("#cargo").text()))
 		    	.done(function (dados){
 		    		try{
 		    			if(preencheu == true){
@@ -893,7 +893,7 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				$.getJSON(servicoTerminal).done(verificarUrna);
+				$.getJSON("http://localhost:9080/pegarStatusUrna/"+localStorage.getItem("ipUrna")).done(verificarUrna);
 
 			}else if(votouBranco == true){
 	        	votouBranco = false;
@@ -930,7 +930,7 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				$.getJSON(servicoTerminal).done(verificarUrna);
+				$.getJSON("http://localhost:9080/pegarStatusUrna/"+localStorage.getItem("ipUrna")).done(verificarUrna);
 			}else if(votoValido == true){
 				clearTelas();
 	        	votoValido = false;
@@ -969,7 +969,7 @@ $(document).ready(function(){
 				preencheuBool = false;
 				botaoCorrige = false;
 				botaoConfirmar = true;
-				$.getJSON(servicoTerminal)
+				$.getJSON("http://localhost:9080/pegarStatusUrna/"+localStorage.getItem("ipUrna"))
 	        	.done(verificarUrna);
 
 			}
