@@ -628,6 +628,7 @@ $(document).ready(function(){
 
 	function ipUrna(ip){
 		ipUrna = ip.ipUrna;
+		$("#ipUrna").text("IP URNA: "+ipUrna);
 		localStorage.setItem("ipUrna", ipUrna);
 	}
 
@@ -672,7 +673,7 @@ $(document).ready(function(){
 
 	var interval = setInterval(function () {
         if(iniciarUrna == true){
-        	$.getJSON(servicoUrnaFinalizada).done(function (dados){
+        	$.getJSON(servicoUrnaFinalizada+"/"+localStorage.getItem("ipUrna")).done(function (dados){
         		if(dados.status == 1){
         			if(terminalFinalizouVotacao == true){
         				clearTelas();
@@ -683,7 +684,7 @@ $(document).ready(function(){
         			}
         		}
         	});
-        	$.getJSON(servicoUrnaCancelada).done(function (dados){
+        	$.getJSON(servicoUrnaCancelada+"/"+localStorage.getItem("ipUrna")).done(function (dados){
         		if(dados.status == 1){
         			if(terminalCancelouVotacao == true){
         				clearTelas();
@@ -713,7 +714,7 @@ $(document).ready(function(){
         			}
         		}
         	});
-        	$.getJSON(servicoTerminal).done(function (dados) {
+        	$.getJSON(servicoTerminal+"/"+localStorage.getItem("ipUrna")).done(function (dados) {
 				if(dados.status == "bloqueada"){
 					 if(terminalTravouUrna == true){
 						 clearTelas();

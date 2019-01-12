@@ -3,21 +3,21 @@
 # ~~~~
 
 # Home page
-GET     /                                       UrnaClient.main
-GET		/pegarTerminal							UrnaClient.pegarTerminal
-GET		/pegarCandidato/{idSecao}/{numero}/{idCargo}					UrnaClient.pegarCandidato
-GET     /pegarStatusUrna						UrnaClient.pegarStatusUrna
+GET     /                                       		UrnaClient.main
+GET		/pegarTerminal									UrnaClient.pegarTerminal
+GET		/pegarCandidato/{idSecao}/{numero}/{idCargo}	UrnaClient.pegarCandidato
+GET     /pegarStatusUrna/{ipUrna}						UrnaClient.pegarStatusUrna
 GET		/listarCargos/{idSecao}							UrnaClient.listarCargos
-POST    /voto									UrnaClient.enviarVoto
-GET		/meuIp									UrnaClient.meuIp
-GET     /pegarStatusUrnaFinalizada				UrnaClient.pegarStatusUrnaFinalizada
-GET     /pegarStatusUrnaCancelada				UrnaClient.pegarStatusUrnaCancelada
-POST    /enviarPedidoTempo						UrnaClient.enviarPedidoTempo
-POST	/informaVotacaoFinalizada				UrnaClient.informaVotacaoFinalizada
-GET		/buscaSecao/{ipUrna}					UrnaClient.buscaSecao
-GET		/ipUrna									UrnaClient.ipUrna
-POST	/setUrna								UrnaClient.setUrna
-POST	/enviarIpUrna							UrnaClient.enviarIpUrna
+POST    /voto											UrnaClient.enviarVoto
+GET		/meuIp											UrnaClient.meuIp
+GET     /pegarStatusUrnaFinalizada/{ipUrna}				UrnaClient.pegarStatusUrnaFinalizada
+GET     /pegarStatusUrnaCancelada/{ipUrna}				UrnaClient.pegarStatusUrnaCancelada
+POST    /enviarPedidoTempo								UrnaClient.enviarPedidoTempo
+POST	/informaVotacaoFinalizada						UrnaClient.informaVotacaoFinalizada
+GET		/buscaSecao/{ipUrna}							UrnaClient.buscaSecao
+GET		/ipUrna											UrnaClient.ipUrna
+POST	/setUrna										UrnaClient.setUrna
+POST	/enviarIpUrna									UrnaClient.enviarIpUrna
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
