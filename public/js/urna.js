@@ -752,6 +752,9 @@ $(document).ready(function(){
 								//url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
 						        url: "http://localhost:9080/enviarPedidoTempo",
 						          type : 'post',
+						          data:{
+						        	  ipUrna: localStorage.getItem("ipUrna")
+						          }
 								})
 								.done(function(msg){
 								});
@@ -900,7 +903,8 @@ $(document).ready(function(){
 			        url: "http://localhost:"+portClient+"/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
-			               status: "finalizado"
+			               status: "finalizado",
+			               ipUrna: localStorage.getItem("ipUrna")
 			          },
 					})
 					.done(function(msg){
@@ -937,7 +941,8 @@ $(document).ready(function(){
 			        url: "http://localhost:"+portClient+"/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
-			               status: "finalizado"
+			               status: "finalizado",
+			               ipUrna: localStorage.getItem("ipUrna")
 			          },
 					})
 					.done(function(msg){
@@ -965,7 +970,8 @@ $(document).ready(function(){
 			        url: "http://localhost:"+portClient+"/informaVotacaoFinalizada",
 			          type : 'post',
 			          data : {
-			               status: "finalizado"
+			               status: "finalizado",
+			               ipUrna: localStorage.getItem("ipUrna")
 			          },
 					})
 					.done(function(msg){

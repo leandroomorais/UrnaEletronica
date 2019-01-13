@@ -19,6 +19,7 @@ GET		/ipUrna											UrnaClient.ipUrna
 POST	/setUrna										UrnaClient.setUrna
 POST	/enviarIpUrna									UrnaClient.enviarIpUrna
 POST	/urnaPediuTempo									UrnaClient.urnaPediuTempo
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

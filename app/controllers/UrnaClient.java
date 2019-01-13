@@ -15,6 +15,7 @@ import models.IpUrna;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
 import play.mvc.Controller;
+import play.mvc.Http;
 
 public class UrnaClient extends Controller{
 	private static final Gson g = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
@@ -37,15 +38,21 @@ public class UrnaClient extends Controller{
 		}
 	}
 	
-	public static void informaVotacaoFinalizada(String status) {
+	public static void informaVotacaoFinalizada(String status, String ipUrna) {
 		UrnaClient.response.accessControl("*");
-		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/finalizarVotacaoAtual").setParameter("status", status).post();
+		Map param = new HashMap<>();
+		param.put("status", status);
+		param.put("ipTerminal", ipUrna);
+		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/finalizarVotacaoAtual").setParameters(param).post();
 		//HttpResponse response = WS.url("http://10.116.0.1:9000/finalizarVotacaoAtual").setParameter("status", status).post();
 	}
 	
-	public static void enviarPedidoTempo() {
+	public static void enviarPedidoTempo(String ipUrna) {
 		UrnaClient.response.accessControl("*");
-		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/tempoParaUrna").setParameter("codUrna", random.nextInt()).post();
+		Map param = new HashMap<>();
+		param.put("codUrna", random.nextInt());
+		param.put("ipTerminal", ipUrna);
+		HttpResponse response = WS.url("https://service-terminal.herokuapp.com/tempoParaUrna").setParameters(param).post();
 		//HttpResponse response = WS.url("http://10.116.0.1:9000/tempoParaUrna").setParameter("codUrna", random.nextInt()).post();
 	}
 	
