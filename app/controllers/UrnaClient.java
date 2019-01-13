@@ -27,7 +27,7 @@ public class UrnaClient extends Controller{
 	public static void enviarIpUrna(String ipUrna) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/receberIpUrna").setParameter("ipUrna", ipUrna).post();
-		//HttpResponse response = WS.url("http://localhost:9002/receberIpUrna").setParameter("ipUrna", ipUrna).post();
+		//HttpResponse response = WS.url("http://192.168.1.10:9002/receberIpUrna").setParameter("ipUrna", ipUrna).post();
 		if(response.success()) {
 			String teste = response.getString();
 			renderJSON(teste);
@@ -52,7 +52,7 @@ public class UrnaClient extends Controller{
 	public static void pegarStatusUrnaFinalizada(String ipUrna) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/votacao-finalizada/"+ipUrna).get();
-		//HttpResponse response = WS.url("http://localhost:9002/votacao-finalizada").get();
+		//HttpResponse response = WS.url("http://192.168.1.10:9002/votacao-finalizada").get();
 		String teste = response.getString();
 		renderJSON(teste);
 	}
@@ -60,7 +60,7 @@ public class UrnaClient extends Controller{
 	public static void pegarStatusUrnaCancelada(String ipUrna) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/cancela-votacao/"+ipUrna).get();
-		//HttpResponse response = WS.url("http://localhost:9002/cancela-votacao").get();
+		//HttpResponse response = WS.url("http://192.168.1.10:9002/cancela-votacao").get();
 		String teste = response.getString();
 		renderJSON(teste);
 	}
@@ -77,11 +77,24 @@ public class UrnaClient extends Controller{
 			paramentros.put("voto", voto);
 			paramentros.put("tipo", tipo);
 			HttpResponse response = WS.url("https://urna-api.herokuapp.com/voto").setParameters(paramentros).post();
-			//HttpResponse response = WS.url("http://localhost:9002/voto").setParameters(paramentros).post();
+			//HttpResponse response = WS.url("http://192.168.1.10:9002/voto").setParameters(paramentros).post();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		
+	}
+	
+	public static void urnaPediuTempo() {
+		try {
+			UrnaClient.response.accessControl("*");
+			String ipUrna2 = InetAddress.getLocalHost().getHostAddress();
+			Map paramentros = new HashMap<>();
+			paramentros.put("status", "pediuTempo");
+			paramentros.put("ipUrna", ipUrna2);
+			HttpResponse response = WS.url("https://urna-api.herokuapp.com/api/terminal").setParameters(paramentros).post();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	public static void pegarCandidato(long idSecao, int numero, long idCargo) {
@@ -101,7 +114,7 @@ public class UrnaClient extends Controller{
 	public static void pegarStatusUrna(String ipUrna) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/get-terminal/"+ipUrna).get();
-		//HttpResponse response = WS.url("http://localhost:9002/get-terminal/"+ipUrna).get();
+		//HttpResponse response = WS.url("http://192.168.1.10:9002/get-terminal/"+ipUrna).get();
 		String teste = response.getString();
 		renderJSON(teste);
 	}
@@ -109,7 +122,7 @@ public class UrnaClient extends Controller{
 	public static void buscaSecao(String ipUrna) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/getSecao/"+ipUrna).get();
-		//HttpResponse response = WS.url("http://localhost:9002/getSecao/"+ipUrna).get();
+		//HttpResponse response = WS.url("http://192.168.1.10:9002/getSecao/"+ipUrna).get();
 		String json = response.getString();
 		renderJSON(json);
 	}

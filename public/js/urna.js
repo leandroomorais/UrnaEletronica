@@ -745,6 +745,13 @@ $(document).ready(function(){
 								})
 								.done(function(msg){
 								});
+			        		$.ajax({
+								//url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
+						        url: "http://localhost:9080/urnaPediuTempo",
+						          type : 'post',						          
+								})
+								.done(function(msg){
+								});
 			        		segundos = 0;
 			        		minutos = 0;
 			        	}
@@ -761,6 +768,11 @@ $(document).ready(function(){
 					terminalCancelouVotacao = true;
 				}else if(dados.status == "finalizou"){
 					terminalFinalizouVotacao = true;
+				}else if(dados.status == "pediuTempo"){
+					clearTelas();
+					telaTerminal();
+					terminalLiberouUrna = true;
+					terminalTravouUrna = false;
 				}
 			});
 
