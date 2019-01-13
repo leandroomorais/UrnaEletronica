@@ -666,6 +666,9 @@ $(document).ready(function(){
 
 						}).done(function(msg){
 						});
+					$.getJSON("http://localhost:9080/ipTerminal/"+localStorage.getItem("idSecao")).done(function(data){
+						localStorage.setItem("ipTerminal", data.value);
+					});
 					enviouSecao = true;
 					secaoEnviada = false;
 					clearTelas();
@@ -753,7 +756,7 @@ $(document).ready(function(){
 						        url: "http://localhost:9080/enviarPedidoTempo",
 						          type : 'post',
 						          data:{
-						        	  ipUrna: localStorage.getItem("ipUrna")
+						        	  ipTerminal: localStorage.getItem("ipTerminal")
 						          }
 								})
 								.done(function(msg){
@@ -904,7 +907,7 @@ $(document).ready(function(){
 			          type : 'post',
 			          data : {
 			               status: "finalizado",
-			               ipUrna: localStorage.getItem("ipUrna")
+			               ipTerminal: localStorage.getItem("ipTerminal")
 			          },
 					})
 					.done(function(msg){
@@ -942,7 +945,7 @@ $(document).ready(function(){
 			          type : 'post',
 			          data : {
 			               status: "finalizado",
-			               ipUrna: localStorage.getItem("ipUrna")
+			               ipTerminal: localStorage.getItem("ipTerminal")
 			          },
 					})
 					.done(function(msg){
@@ -971,7 +974,7 @@ $(document).ready(function(){
 			          type : 'post',
 			          data : {
 			               status: "finalizado",
-			               ipUrna: localStorage.getItem("ipUrna")
+			               ipTerminal: localStorage.getItem("ipTerminal")
 			          },
 					})
 					.done(function(msg){

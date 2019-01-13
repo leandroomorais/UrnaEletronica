@@ -64,6 +64,11 @@ public class UrnaClient extends Controller{
 		renderJSON(teste);
 	}
 	
+	public static void ipTerminal(String idSecao) {
+		HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/getTerminal?idSecao="+idSecao).get();
+		renderJSON(response.getString());
+	}
+	
 	public static void pegarStatusUrnaCancelada(String ipUrna) {
 		UrnaClient.response.accessControl("*");
 		HttpResponse response = WS.url("https://urna-api.herokuapp.com/cancela-votacao/"+ipUrna).get();
