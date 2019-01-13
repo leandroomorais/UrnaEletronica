@@ -656,6 +656,16 @@ $(document).ready(function(){
 						idSecao = secao.secao;
 					});
 					localStorage.setItem("idSecao", idSecao);
+					$.ajax({
+				        //url: "https://urna-eletronica.herokuapp.com/setUrna",
+				        url: "http://localhost:"+portClient+"/setUrna",
+				        type: 'post',
+				        data: {
+				        	idSecao: localStorage.getItem("idSecao"),
+				        },
+
+						}).done(function(msg){
+						});
 					enviouSecao = true;
 					secaoEnviada = false;
 					clearTelas();
@@ -732,7 +742,7 @@ $(document).ready(function(){
 						
 					}
 					terminalTravouUrna = false;
-					if(botaoConfirmar == false){
+					if(botaoConfirmar == false && encerrarVotacao == false){
 						//console.log("Segundos: "+segundos);
 						console.log("Entrou no Pedir tempo: "+segundos);
 			        	segundos++;
@@ -780,16 +790,6 @@ $(document).ready(function(){
 
     }, 1000);
 
-	$.ajax({
-        //url: "https://urna-eletronica.herokuapp.com/setUrna",
-        url: "http://localhost:"+portClient+"/setUrna",
-        type: 'post',
-        data: {
-        	idSecao: localStorage.getItem("idSecao"),
-        },
-
-		}).done(function(msg){
-		});
 	console.log("IdSecao: "+localStorage.getItem("idSecao"));
 	$("button").click(function(){
 		if(preencheu == true){

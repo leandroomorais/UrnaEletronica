@@ -152,12 +152,13 @@ public class UrnaClient extends Controller{
 			
 			HttpResponse response = WS.url("http://tse.vps.leandrorego.com/api/setUrna").setParameters(param).post();
 			
-			if(response.success()){
+			/*if(response.success()){
 				System.out.println("Deu certo para setUrna");
 			}else{
 				System.out.println("Erro para setUrna");
 				//flash.error("Erro para setUrna");
-			}
+			}*/
+			System.out.println(response.getString());
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
