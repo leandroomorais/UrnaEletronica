@@ -49,6 +49,7 @@ var secaoEnviada = false;
 var enviarSecaoTSE = false;
 var numeroSenadorAtual = -1;
 var eleicao5Cargos = false;
+var naoVinculou = false;
 
 function ComponentsTelaBranco(cargo){
 	try{
@@ -582,6 +583,17 @@ $(document).ready(function(){
 					encerrarVotacao = true;
 					controlador = 0;
 					preencheu = false;
+					$.ajax({
+						//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
+				        url: "http://localhost:"+portClient+"/informaVotacaoFinalizada",
+				          type : 'post',
+				          data : {
+				               status: "finalizado",
+				               ipTerminal: localStorage.getItem("ipTerminal")
+				          },
+						})
+						.done(function(msg){
+						});
 				}else{
 					if(arrayCargos[controlador].nome == "Senador"){
 						criarComponentsTelaDinamica(arrayCargos[controlador].nome+" "+incremento, verificarCargoNumero(arrayCargos[controlador].id));
@@ -761,6 +773,7 @@ $(document).ready(function(){
 								})
 								.done(function(msg){
 								});
+			        		console.log("IP DO TERMINAL: "+localStorage.getItem("ipTerminal"));
 			        		$.ajax({
 								//url: "https://urna-eletronica.herokuapp.com/enviarPedidoTempo",
 						        url: "http://localhost:9080/urnaPediuTempo",
@@ -901,17 +914,6 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				$.ajax({
-					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        url: "http://localhost:"+portClient+"/informaVotacaoFinalizada",
-			          type : 'post',
-			          data : {
-			               status: "finalizado",
-			               ipTerminal: localStorage.getItem("ipTerminal")
-			          },
-					})
-					.done(function(msg){
-					});
 				$.getJSON("http://localhost:9080/pegarStatusUrna/"+localStorage.getItem("ipUrna")).done(verificarUrna);
 
 			}else if(votouBranco == true){
@@ -939,17 +941,7 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				$.ajax({
-					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        url: "http://localhost:"+portClient+"/informaVotacaoFinalizada",
-			          type : 'post',
-			          data : {
-			               status: "finalizado",
-			               ipTerminal: localStorage.getItem("ipTerminal")
-			          },
-					})
-					.done(function(msg){
-					});
+			 
 				$.getJSON("http://localhost:9080/pegarStatusUrna/"+localStorage.getItem("ipUrna")).done(verificarUrna);
 			}else if(votoValido == true){
 				clearTelas();
@@ -968,18 +960,6 @@ $(document).ready(function(){
 					})
 					.done(function(msg){
 					});
-				$.ajax({
-					//url: "https://urna-eletronica.herokuapp.com/informaVotacaoFinalizada",
-			        url: "http://localhost:"+portClient+"/informaVotacaoFinalizada",
-			          type : 'post',
-			          data : {
-			               status: "finalizado",
-			               ipTerminal: localStorage.getItem("ipTerminal")
-			          },
-					})
-					.done(function(msg){
-					});
-
 				controlador++;
 				controladorAUX++;
 				j = 0;
